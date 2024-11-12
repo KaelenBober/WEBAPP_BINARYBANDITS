@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Wars RPG</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="title-screen">
+    <h1>Star Wars RPG</h1>
+    <a href="{{ url_for('login') }}">
+        <button>Start Game</button>
+    </a>
+</body>
+</html>

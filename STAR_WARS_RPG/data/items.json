@@ -1,0 +1,25 @@
+{
+  "abilities": [
+    "Strength",
+    "Agility",
+    "Intelligence",
+    "Stealth",
+    "Charisma"
+  ],
+  "starting_items": [
+    { "name": "Health Potion", "price": 5 },
+    { "name": "Energy Drink", "price": 3 }
+  ],
+  "locations": [
+    { "name": "Tatooine", "events": [
+        { "name": "Bandit Attack", "type": "combat" },
+        { "name": "Treasure Chest", "type": "reward", "reward": 10 }
+      ]
+    },
+    { "name": "Hoth", "events": [
+        { "name": "Snowstorm", "type": "reward", "reward": 20 },
+        { "name": "Ice Wraith", "type": "combat" }
+      ]
+    }
+  ]
+}

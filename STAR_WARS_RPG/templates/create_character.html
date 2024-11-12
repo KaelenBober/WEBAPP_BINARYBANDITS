@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your Character</title>
+</head>
+<body>
+    <h1>Create Your Character</h1>
+    <form method="POST">
+        <label for="name">Character Name: </label>
+        <input type="text" id="name" name="name" required><br>
+
+        <h3>Select Abilities</h3>
+        {% for ability in abilities %}
+            <input type="checkbox" name="abilities" value="{{ ability }}"> {{ ability }}<br>
+        {% endfor %}
+
+        <button type="submit">Next</button>
+    </form>
+</body>
+</html>
