@@ -1,6 +1,4 @@
-
-
-/* @font-face rule to define the Star Jedi font */
+/* Font Face for Star Wars Title */
 @font-face {
     font-family: 'StarJedi';
     src: url('/static/Starjedi.ttf') format('truetype'); /* Correct path to the font file */
@@ -80,3 +78,110 @@ button:hover {
 a {
     text-decoration: none;
 }
+
+/* --- New Styles for Login and Register Pages --- */
+
+/* General Star Wars Theme */
+body.login-page, body.register-page {
+    background-image: url('/static/millennium_falcon_background.jpg'); /* Galaxy background */
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    color: #FFD700;
+}
+
+/* Star Wars Font for Titles */
+.login-page .star-wars-title,
+.register-page .star-wars-title {
+    font-family: 'StarJedi', Arial, sans-serif;
+    font-size: 3em;
+    text-align: center;
+    color: #FFD700;
+    text-shadow: 0 0 10px #FFD700;
+    margin-bottom: 20px;
+}
+
+/* Form Container */
+.login-container, .register-container {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 2rem;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+}
+
+/* Form Labels and Inputs */
+form label {
+    display: block;
+    margin-top: 10px;
+    color: #FFD700;
+}
+
+form input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+}
+
+/* Star Wars Button Style */
+.star-wars-button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    background-color: #FFD700;
+    color: black;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.star-wars-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700;
+}
+
+/* Link Styling */
+.star-wars-link {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 1rem;
+}
+
+.star-wars-link a {
+    color: #FFD700;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.star-wars-link a:hover {
+    text-shadow: 0 0 5px #FFD700;
+}
+
+/* Password container styling */
+.password-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+/* Toggle icon styling */
+#toggleIcon {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5em;
+    color: #FFD700;
+}
+``

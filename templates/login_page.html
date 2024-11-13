@@ -3,27 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login / Register</title>
+    <title>Star Wars RPG - Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <h2>Login</h2>
+<body class="login-page">
+    <div class="login-container">
+        <h2 class="star-wars-title">Login</h2>
 
-    <!-- Ensure the form method is POST and action is specified (if needed) -->
-    <form method="POST" action="{{ url_for('login') }}">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
+        <form method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br><br>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
+            <label for="password">Password:</label>
+            <div class="password-container">
+                <input type="password" id="password" name="password" required><br><br>
+                <!-- Eye icon for password toggle -->
+                <span id="toggleIcon" onclick="togglePasswordVisibility()" style="cursor: pointer;">👁️</span>
+            </div>
 
-        <button type="submit">Login</button>
-    </form>
+            <button type="submit" class="star-wars-button">Login</button>
+        </form>
 
-    <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+        <p class="star-wars-link">Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+    </div>
 
-    <!-- Optional: Add error message display here -->
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
+    <script>
+        function togglePasswordVisibility() {
+            var passwordField = document.getElementById('password');
+            var toggleIcon = document.getElementById('toggleIcon');
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.textContent = '👁️‍🗨️'; // Open eye
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.textContent = '👁️'; // Closed eye
+            }
+        }
+    </script>
 </body>
 </html>

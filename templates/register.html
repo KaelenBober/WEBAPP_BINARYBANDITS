@@ -3,18 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Star Wars RPG - Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <h2>Register</h2>
-    <form method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        <button type="submit">Register</button>
-    </form>
+<body class="register-page">
+    <div class="register-container">
+        <h2 class="star-wars-title">Register</h2>
 
-    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        <form method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br><br>
+
+            <label for="password">Password:</label>
+            <div class="password-container">
+                <input type="password" id="password" name="password" required><br><br>
+                <!-- Eye icon for password toggle -->
+                <span id="toggleIcon" onclick="togglePasswordVisibility()" style="cursor: pointer;">👁️</span>
+            </div>
+
+            <button type="submit" class="star-wars-button">Register</button>
+        </form>
+
+        <p class="star-wars-link">Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+    </div>
+
+    <script>
+        function togglePasswordVisibility() {
+            var passwordField = document.getElementById('password');
+            var toggleIcon = document.getElementById('toggleIcon');
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.textContent = '👁️‍🗨️'; // Open eye
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.textContent = '👁️'; // Closed eye
+            }
+        }
+    </script>
 </body>
 </html>
