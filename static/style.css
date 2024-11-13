@@ -1,3 +1,5 @@
+
+
 /* @font-face rule to define the Star Jedi font */
 @font-face {
     font-family: 'StarJedi';
@@ -8,7 +10,7 @@
 
 /* Title Screen Styles */
 body.title-screen {
-    background-image: url('/static/background.jpg'); /* Correct path for background image */
+    background-image: url('/static/background.jpg');
     background-size: cover;
     background-position: center;
     height: 100vh;
@@ -20,10 +22,10 @@ body.title-screen {
     color: black;
 }
 
-/* Apply the Star Wars font to the title (h1) */
 h1 {
-    font-family: 'StarJedi', Arial, sans-serif; /* Apply Star Jedi font */
-    font-size: 3em;
+    font-family: 'StarJedi', Arial, sans-serif;
+    font-size: 6em;
+    color: yellow;
     margin-bottom: 20px;
 }
 
@@ -39,12 +41,18 @@ body.game-page {
     color: white;
 }
 
-/* Shared Styles */
+body.game-page h1 {
+    font-family: 'StarJedi', Arial, sans-serif;
+    font-size: 4em; /* Smaller font size for game page */
+    color: #ff6347; /* Tomato color for the title in the game page */
+}
+
+/* Remove the translucent background around the content */
 .content {
     text-align: center;
     padding: 20px;
     border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: transparent;
 }
 
 button {

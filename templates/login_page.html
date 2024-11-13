@@ -1,15 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Game Page</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Register</title>
 </head>
-<body class="game-page">
-    <div class="content">
-        <h1>Game Page</h1>
-        <a href="{{ url_for('index') }}">
-            <button class="return-button">Return to Title</button>
-        </a>
-    </div>
+<body>
+    <h2>Login</h2>
+
+    <!-- Ensure the form method is POST and action is specified (if needed) -->
+    <form method="POST" action="{{ url_for('login') }}">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+
+    <!-- Optional: Add error message display here -->
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
 </body>
 </html>
