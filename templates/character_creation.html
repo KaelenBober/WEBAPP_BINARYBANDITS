@@ -4,19 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Character Creation</title>
-    <!-- Link to Star Wars-inspired font (Google Fonts) -->
-    <link href="https://fonts.googleapis.com/css2?family=Star+Jedi&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
+        /* Custom Star Wars title font */
+        @font-face {
+            font-family: 'StarWarsTitle';
+            src: url('{{ url_for('static', filename='Starjedi.ttf') }}') format('truetype');
+        }
+
+        /* Custom Star Wars class font */
+        @font-face {
+            font-family: 'StarWarsClass';
+            src: url('{{ url_for('static', filename='Starjhol.ttf') }}') format('truetype');
+        }
+
         body {
-            background-color: #000000; /* Star Wars dark theme */
+            background-color: #000000;
             color: #f0f0f0;
-            font-family: 'Star Jedi', sans-serif; /* Star Wars-like font */
+            font-family: 'StarWarsTitle', sans-serif; /* Apply the Star Wars class font for the content */
             text-align: center;
         }
 
-        h2, h3 {
-            color: #ffcc00; /* Star Wars yellow text */
+        /* Apply Star Wars title font to h2, h3, and the "Select Character" text */
+        h2, h3, .character-selection p {
+            font-family: 'StarWarsTitle', sans-serif; /* Apply the Star Wars title font */
+            color: #ffcc00;
+            font-size: 2rem; /* Adjusted for readability */
+            font-weight: bold;
         }
 
         .character-creation-container {
@@ -27,7 +41,7 @@
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 40px; /* Increased gap for better spacing */
+            gap: 40px;
             margin-top: 30px;
             padding: 20px;
         }
@@ -36,10 +50,11 @@
             border: 3px solid #ffcc00;
             border-radius: 10px;
             padding: 10px;
-            width: 200px; /* Adjusted to make images larger */
+            width: 200px;
             cursor: pointer;
             transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 12px rgba(255, 204, 0, 0.6); /* Default glow for Jedi */
+            box-shadow: 0 4px 12px rgba(255, 204, 0, 0.6);
+            font-family: 'StarWarsClass', sans-serif; /* Use the Star Wars class font for the character subclass text */
         }
 
         .character-selection:hover {
@@ -104,38 +119,101 @@
 
         /* Color-specific glow effects */
         .jedi {
-            box-shadow: 0 4px 12px rgba(0, 0, 255, 0.8); /* Blue glow for Jedi */
+            box-shadow: 0 4px 12px rgba(0, 0, 255, 0.8);
             border-color: #0000ff;
         }
 
         .sith {
-            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.8); /* Red glow for Sith */
+            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.8);
             border-color: #ff0000;
         }
 
         .droid {
-            box-shadow: 0 4px 12px rgba(255, 255, 0, 0.8); /* Yellow glow for Droid */
+            box-shadow: 0 4px 12px rgba(255, 255, 0, 0.8);
             border-color: #ffff00;
         }
 
         .smuggler {
-            box-shadow: 0 4px 12px rgba(0, 255, 0, 0.8); /* Green glow for Smuggler */
+            box-shadow: 0 4px 12px rgba(0, 255, 0, 0.8);
             border-color: #00ff00;
         }
 
         .bounty-hunter {
-            box-shadow: 0 4px 12px rgba(128, 0, 128, 0.8); /* Purple glow for Bounty Hunter */
+            box-shadow: 0 4px 12px rgba(128, 0, 128, 0.8);
             border-color: #800080;
         }
 
         .mandalorian {
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.8); /* White glow for Mandalorian */
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.8);
             border-color: #ffffff;
         }
 
+        .selected {
+            transform: scale(1.2);
+            border: 3px solid #ffcc00;
+            box-shadow: 0 6px 16px rgba(255, 204, 0, 1);
+        }
+
+        /* Apply the glow color on selection */
+        .jedi.selected {
+            background-color: rgba(0, 0, 255, 0.2);
+        }
+
+        .sith.selected {
+            background-color: rgba(255, 0, 0, 0.2);
+        }
+
+        .droid.selected {
+            background-color: rgba(255, 255, 0, 0.2);
+        }
+
+        .smuggler.selected {
+            background-color: rgba(0, 255, 0, 0.2);
+        }
+
+        .bounty-hunter.selected {
+            background-color: rgba(128, 0, 128, 0.2);
+        }
+
+        .mandalorian.selected {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Apply Star Wars title font to select character text */
+        .character-selection p {
+            font-family: 'StarWarsClass', sans-serif; /* Apply the Star Wars title font to the text */
+        }
+
+        /* Custom styles for Select and Delete buttons */
+        a {
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        a[href*="select_character"] {
+            color: blue; /* Blue color for Select button */
+        }
+
+        a[href*="delete_character"] {
+            color: red; /* Red color for Delete button */
+        }
+
+        a::after {
+            content: ' |'; /* Add divider after each link */
+            color: white; /* White color for the divider */
+        }
+
+        a:last-of-type::after {
+            content: ''; /* Remove the divider after the last link */
+        }
     </style>
 </head>
 <body>
+
+    <audio autoplay loop>
+        <source src="{{ url_for('static', filename='anakin_dream.mp3') }}" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
 
     <div class="character-creation-container">
         <h2>Character Creation</h2>
@@ -164,44 +242,41 @@
 
                 <div class="character-selection-container">
                     <!-- Jedi -->
-                    <div class="character-selection jedi" onclick="setCharacterType('jedi')">
+                    <div class="character-selection jedi" id="jedi" onclick="selectCharacterType('jedi')">
                         <img src="{{ url_for('static', filename='jedi_image.jpg') }}" alt="Jedi">
                         <p>Jedi</p>
                     </div>
 
                     <!-- Bounty Hunter -->
-                    <div class="character-selection bounty-hunter" onclick="setCharacterType('bounty_hunter')">
+                    <div class="character-selection bounty-hunter" id="bounty_hunter" onclick="selectCharacterType('bounty_hunter')">
                         <img src="{{ url_for('static', filename='bounty_hunter_image.jpg') }}" alt="Bounty Hunter">
                         <p>Bounty Hunter</p>
                     </div>
 
-                    <!-- Droid -->
-                    <div class="character-selection droid" onclick="setCharacterType('droid')">
-                        <img src="{{ url_for('static', filename='droid_image.jpg') }}" alt="Droid">
-                        <p>Droid</p>
-                    </div>
-
                     <!-- Sith -->
-                    <div class="character-selection sith" onclick="setCharacterType('sith')">
+                    <div class="character-selection sith" id="sith" onclick="selectCharacterType('sith')">
                         <img src="{{ url_for('static', filename='sith_image.jpg') }}" alt="Sith">
                         <p>Sith</p>
                     </div>
 
                     <!-- Smuggler -->
-                    <div class="character-selection smuggler" onclick="setCharacterType('smuggler')">
+                    <div class="character-selection smuggler" id="smuggler" onclick="selectCharacterType('smuggler')">
                         <img src="{{ url_for('static', filename='smuggler_image.jpg') }}" alt="Smuggler">
                         <p>Smuggler</p>
                     </div>
 
                     <!-- Mandalorian -->
-                    <div class="character-selection mandalorian" onclick="setCharacterType('mandalorian')">
+                    <div class="character-selection mandalorian" id="mandalorian" onclick="selectCharacterType('mandalorian')">
                         <img src="{{ url_for('static', filename='mandalorian_image.jpg') }}" alt="Mandalorian">
                         <p>Mandalorian</p>
                     </div>
-                </div>
 
-                <!-- Hidden input to store the selected character type -->
-                <input type="hidden" id="character_type" name="character_type" value="">
+                    <!-- Droid -->
+                    <div class="character-selection droid" id="droid" onclick="selectCharacterType('droid')">
+                        <img src="{{ url_for('static', filename='droid_image.jpg') }}" alt="Droid">
+                        <p>Droid</p>
+                    </div>
+                </div>
 
                 <button type="submit">Create Character</button>
             </form>
@@ -209,11 +284,17 @@
     </div>
 
     <script>
-        // Function to set the character type when a user clicks on an image
-        function setCharacterType(characterType) {
-            document.getElementById('character_type').value = characterType;
+        function selectCharacterType(characterType) {
+            // Clear all selected classes
+            var allCharacterSelections = document.querySelectorAll('.character-selection');
+            allCharacterSelections.forEach(function(selection) {
+                selection.classList.remove('selected');
+            });
+
+            // Add selected class to the clicked character type
+            var selectedCharacter = document.getElementById(characterType);
+            selectedCharacter.classList.add('selected');
         }
     </script>
-
 </body>
 </html>
