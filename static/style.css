@@ -1,32 +1,57 @@
-/* Apply the background to the body */
-    body.title-screen {
-        background-image: url(/static/background.jpg);
+/* @font-face rule to define the Star Jedi font */
+@font-face {
+    font-family: 'StarJedi';
+    src: url('/static/Starjedi.ttf') format('truetype'); /* Correct path to the font file */
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Title Screen Styles */
+body.title-screen {
+    background-image: url('/static/background.jpg'); /* Correct path for background image */
     background-size: cover;
     background-position: center;
-    height: 100vh; /* Full height of the viewport */
+    height: 100vh;
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: Arial, sans-serif;
-    color: yellow;
+    color: black;
 }
 
-/* Center the content */
-.content {
-    text-align: center;
-}
-
+/* Apply the Star Wars font to the title (h1) */
 h1 {
+    font-family: 'StarJedi', Arial, sans-serif; /* Apply Star Jedi font */
     font-size: 3em;
     margin-bottom: 20px;
+}
+
+/* Game Page Styles */
+body.game-page {
+    background-color: #2c3e50;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+/* Shared Styles */
+.content {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 button {
     padding: 10px 20px;
     font-size: 1.2em;
     cursor: pointer;
-    background-color: #f0c674; /* Adjust as needed */
+    background-color: #f0c674;
     border: none;
     border-radius: 5px;
     transition: background-color 0.3s;
@@ -34,4 +59,16 @@ button {
 
 button:hover {
     background-color: #ffdc00;
+}
+
+.return-button {
+    background-color: #e74c3c;
+}
+
+.return-button:hover {
+    background-color: #c0392b;
+}
+
+a {
+    text-decoration: none;
 }
