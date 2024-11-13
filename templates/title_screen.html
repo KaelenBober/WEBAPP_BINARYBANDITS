@@ -11,8 +11,18 @@
             <button>Start Game</button>
         </a>
     </div>
+
+    <!-- Audio element for background music -->
+    <audio id="backgroundMusic" autoplay>
+        <source src="{{ url_for('static', filename='star_wars_intro.mp3') }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        // Stop the music when the user navigates away from the title screen
+        window.addEventListener("beforeunload", function () {
+            document.getElementById("backgroundMusic").pause();
+        });
+    </script>
 </body>
 </html>
-
-
-
