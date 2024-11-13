@@ -6,6 +6,29 @@
     font-style: normal;
 }
 
+/* Title screen body */
+body.title-screen {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    height: 100vh;
+    overflow: hidden; /* Prevent scrolling */
+    background-color: black;
+}
+
+/* Fullscreen background (moving GIF) */
+.title-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('{{ url_for('static', filename='your-moving-image.gif') }}'); /* Path to your GIF */
+    background-size: cover;
+    background-position: center center;
+    z-index: -1; /* Make sure it stays behind the content */
+}
+
 /* Title Screen Styles */
 body.title-screen {
     background-image: url('/static/background.jpg');
@@ -184,4 +207,3 @@ form input {
     font-size: 1.5em;
     color: #FFD700;
 }
-``
