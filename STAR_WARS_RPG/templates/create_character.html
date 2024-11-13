@@ -11,12 +11,15 @@
         <label for="name">Character Name: </label>
         <input type="text" id="name" name="name" required><br>
 
-        <h3>Select Abilities</h3>
-        {% for ability in abilities %}
-            <input type="checkbox" name="abilities" value="{{ ability }}"> {{ ability }}<br>
-        {% endfor %}
+        <label for="gender">Gender: </label>
+        <select id="gender" name="gender" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Non-binary">Non-binary</option>
+            <option value="Other">Other</option>
+        </select><br>
 
-        <button type="submit">Next</button>
+        <button type="submit">Create Character</button>
     </form>
 </body>
 </html>

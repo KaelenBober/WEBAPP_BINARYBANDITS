@@ -1,25 +1,42 @@
 {
   "abilities": [
-    "Strength",
-    "Agility",
+    "Lightsaber Mastery",
+    "Blaster Proficiency",
+    "Force Push",
+    "Mind Trick",
+    "Pilot Skills",
     "Intelligence",
-    "Stealth",
-    "Charisma"
+    "Hacking Proficiency",
+    "Strength"
   ],
   "starting_items": [
-    { "name": "Health Potion", "price": 5 },
-    { "name": "Energy Drink", "price": 3 }
+    { "name": "Medkit", "effect": "heal", "value": 20 },
+    { "name": "Energy Shield", "effect": "protect", "value": 15 }
+  ],
+  "shop_items": [
+    { "name": "Health Potion", "price": 20, "effect": "Restores 50 HP" },
+    { "name": "Advanced Blaster", "price": 100, "effect": "Increases attack by 20" },
+    { "name": "Enhanced Armor", "price": 80, "effect": "Increases defense by 15" }
   ],
   "locations": [
-    { "name": "Tatooine", "events": [
+    {
+      "name": "Tatooine",
+      "events": [
         { "name": "Bandit Attack", "type": "combat" },
         { "name": "Treasure Chest", "type": "reward", "reward": 10 }
       ]
     },
-    { "name": "Hoth", "events": [
+    {
+      "name": "Hoth",
+      "events": [
         { "name": "Snowstorm", "type": "reward", "reward": 20 },
         { "name": "Ice Wraith", "type": "combat" }
       ]
     }
+  ],
+  "bosses": [
+    { "name": "Darth Vader", "health": 100 },
+    { "name": "Boba Fett", "health": 80 },
+    { "name": "Kylo Ren", "health": 90 }
   ]
 }

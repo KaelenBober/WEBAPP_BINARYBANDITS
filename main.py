@@ -12,7 +12,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# Sample User Data - You would store this in a real database
+# Sample User Data - For demonstration, normally stored in a database
 users_db = {}
 
 # Load items and locations data from JSON
@@ -33,10 +33,9 @@ class User(UserMixin):
         self.username = username
         self.password = password  # Hashed password
 
-# Create a user loader function for Flask-Login
+# User loader for Flask-Login
 @login_manager.user_loader
 def load_user(user_id):
-    # In a real application, you'd load from a database
     return users_db.get(user_id)
 
 # Title screen route
@@ -51,17 +50,16 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        # Check if the user exists in the users_db
+        # Validate user credentials
         user = users_db.get(username)
         if user and check_password_hash(user.password, password):
-            # If password matches, log the user in
             login_user(user)
             return redirect(url_for('create_character'))
         else:
             return render_template('login.html', error="Invalid username or password")
     return render_template('login.html')
 
-# Register page route (for creating new users)
+# Registration page route
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -69,11 +67,11 @@ def register():
         password = request.form['password']
         hashed_password = generate_password_hash(password)
 
-        # In a real application, you would save this to a database
+        # Check if username is unique
         if username not in users_db:
             user = User(id=username, username=username, password=hashed_password)
             users_db[username] = user
-            login_user(user)  # Log the user in after registration
+            login_user(user)
             return redirect(url_for('create_character'))
         else:
             return render_template('register.html', error="Username already exists")
@@ -82,13 +80,13 @@ def register():
 
 # Character creation page
 @app.route('/create_character', methods=['GET', 'POST'])
-@login_required  # Ensure the user is logged in before accessing this page
+@login_required
 def create_character():
     if request.method == 'POST':
         name = request.form['name']
         abilities = request.form.getlist('abilities')
 
-        # Initialize character in session
+        # Initialize character session data
         session['character'] = {
             'name': name,
             'abilities': abilities,
@@ -96,7 +94,6 @@ def create_character():
             'coins': 0,
             'inventory': ITEMS["starting_items"]
         }
-
         return redirect(url_for('select_abilities'))
     return render_template('create_character.html', abilities=ITEMS["abilities"])
 
@@ -109,7 +106,6 @@ def select_abilities():
         selected_abilities = request.form.getlist('abilities')
         if len(selected_abilities) > 3:
             return render_template('select_abilities.html', abilities=abilities, error="You can only select 3 abilities.")
-        # Update abilities in session
         session['character']['abilities'] = selected_abilities
         return redirect(url_for('explore'))
     return render_template('select_abilities.html', abilities=abilities)
@@ -204,7 +200,7 @@ def game_over():
 @app.route('/logout')
 @login_required
 def logout():
-    logout_user()  # Log the user out
+    logout_user()
     return redirect(url_for('index'))
 
 if __name__ == '__main__':

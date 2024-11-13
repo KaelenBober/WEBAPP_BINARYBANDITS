@@ -13,46 +13,45 @@ h1, h2, p {
 
 /* Title Screen Styles */
 .title-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100vh;
-    background-image: url('https://th.bing.com/th/id/R.23a24d1a58127eb95a4acf9772db86fe?rik=1NQPy7J50I3RsA&riu=http%3a%2f%2fwallpapercave.com%2fwp%2fbV3WiYh.jpg&ehk=9SHvCOlThJVWTSh4Ny%2b0OzKbwYmn41rVCY%2fyjCfItq8%3d&risl=&pid=ImgRaw&r=0');
+    background-image: url('/static/background.jpg'); /* Background image */
     background-size: cover;
     background-position: center;
-}
-
-.star-wars-title {
-    font-size: 70px;
-    font-weight: bold;
-    color: gold;
-    text-shadow: 2px 2px 5px black;
-    letter-spacing: 3px;
-}
-
-.subtitle {
-    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: white;
-    margin-top: 20px;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
 }
 
+/* Overlay to make the text more readable */
+.overlay {
+    background: rgba(0, 0, 0, 0.5); /* Slight dark overlay */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Start button styling */
 .start-button {
-    display: inline-block;
-    margin-top: 30px;
-    padding: 15px 30px;
-    font-size: 18px;
+    background-color: #ffcc00;
+    padding: 10px 20px;
+    font-size: 20px;
     text-decoration: none;
-    background-color: gold;
-    color: black;
+    color: #000;
     border-radius: 5px;
-    text-align: center;
-    box-shadow: 2px 2px 5px black;
+    transition: background-color 0.3s ease;
 }
 
 .start-button:hover {
-    background-color: #f1c40f;
+    background-color: #ff9900;
 }
+
 
 /* Character Creation Styles */
 .create-character {
