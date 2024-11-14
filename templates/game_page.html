@@ -7,16 +7,19 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
-<body class="game-page">
-    <div class="content">
-        <h1>Welcome to the Game, {{ character.name }}!</h1>
-        <p>Character Type: {{ character.character_type }}</p>
+<body class="game-page" style="background-image: url('{{ url_for('static', filename='game_background1.jpg') }}'); background-size: cover; background-position: center;">
 
-        <!-- Resume Game Button -->
-        <button onclick="window.location.href='{{ url_for('game') }}'">Resume Game</button>
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" autoplay loop>
+        <source src="{{ url_for('static', filename='game_audio.mp3') }}" type="audio/mpeg">
+        Your browser does not support the audio tag.
+    </audio>
 
-        <!-- Back to Character Creation Button -->
-        <button onclick="window.location.href='{{ url_for('character_creation') }}'">Back to Character Creation</button>
-    </div>
+    <!-- Movable Image -->
+    <img src="{{ url_for('static', filename='character_sprite.jpg') }}" id="movableImage" alt="Character" style="position: absolute; top: 50%; left: 50%; width: 100px;">
+
+    <!-- Back to Character Creation Button -->
+    <button onclick="window.location.href='{{ url_for('character_creation') }}'" style="position: fixed; bottom: 10px; right: 10px;">Back to Character Creation</button>
+
 </body>
 </html>
