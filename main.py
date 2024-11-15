@@ -152,6 +152,7 @@ def select_character(character_id):
     if character and character.user_id == user_id:
         # Save the character selection in the session
         session['selected_character_id'] = character.id
+        session['character_type'] = character.character_type  # Save character_type to session
         flash(f"Character {character.name} selected!", "success")
         return redirect(url_for('game'))  # Redirect to the game page
 
@@ -170,7 +171,8 @@ def game():
     character = Character.query.get(selected_character_id)
 
     if character and character.user_id == user_id:
-        return render_template('game_page.html', character=character)
+        # Pass the character data to the template, including character_type for dynamic image
+        return render_template('game_page.html', character=character, character_type=session.get('character_type'))
 
     flash("Invalid character data. Please select a valid character.", "error")
     return redirect(url_for('character_creation'))

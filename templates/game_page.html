@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
-<body class="game-page" style="background-image: url('{{ url_for('static', filename='game_background1.jpg') }}'); background-size: cover; background-position: center;">
+<body class="game-page" style="background-image: url('{{ url_for('static', filename='game_background1.jpg') }}'); background-size: contain; background-repeat: no-repeat; background-position: center;">
 
     <!-- Background Audio -->
     <audio id="backgroundAudio" autoplay loop>
@@ -15,11 +15,27 @@
         Your browser does not support the audio tag.
     </audio>
 
-    <!-- Movable Image -->
-    <img src="{{ url_for('static', filename='character_sprite.jpg') }}" id="movableImage" alt="Character" style="position: absolute; top: 50%; left: 50%; width: 100px;">
+    <!-- Movable Image for Character -->
+    {% set character_image = {
+        'jedi': 'jedi_imagechar.png',
+        'sith': 'sith_imagechar.png',
+        'bounty_hunter': 'bounty_hunter_imagechar.png',
+        'smuggler': 'smuggler_imagechar.png',
+        'mandalorian': 'mandalorian_imagechar.png',
+        'droid': 'droid_imagechar.png'
+    }[character_type] %}
+    <img src="{{ url_for('static', filename=character_image) }}" id="movableImage" alt="Character" style="position: absolute; top: 50%; left: 50%; width: 100px; transform: scale(0.5);">
 
     <!-- Back to Character Creation Button -->
     <button onclick="window.location.href='{{ url_for('character_creation') }}'" style="position: fixed; bottom: 10px; right: 10px;">Back to Character Creation</button>
 
-</body>
+    <div id="overlay" class="overlay">
+        <div class="overlay-content">
+            <button>Option 1</button>
+            <button>Option 2</button>
+            <button>Option 3</button>
+        </div>
+    </div>
+    
+</body>    
 </html>
