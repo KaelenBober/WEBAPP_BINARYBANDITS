@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
-<body class="game-page" style="background-image: url('{{ url_for('static', filename='game_background1.jpg') }}'); background-size: contain; background-repeat: no-repeat; background-position: center;">
-
+<body class="game-page" style="background-image: url('{{ url_for('static', filename='game_background1.jpg') }}'); background-size: cover; background-position: center;">
     <!-- Background Audio -->
     <audio id="backgroundAudio" autoplay loop>
         <source src="{{ url_for('static', filename='game_audio.mp3') }}" type="audio/mpeg">
@@ -49,8 +48,6 @@
                 <button class="planet-button">Endor</button>
                 <button class="planet-button">Tatooine</button>
             </div>
-            <!-- Return button positioned below -->
-            <button id="exitButton" class="return-button">Return</button>
         </div>
     </div>
     

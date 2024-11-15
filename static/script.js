@@ -23,10 +23,12 @@ document.addEventListener('keydown', function(event) {
     if (event.key === 'a') movingLeft = true;
     if (event.key === 'd') movingRight = true;
 
-    // If "e" is pressed and the character is in the target zone, activate the overlay
-    if (event.key === 'e' && inTargetZone) {
-        console.log("e key pressed inside target zone");  // Debug line
+    if (inTargetZone) {
         showOverlay();
+    }
+
+    if (!inTargetZone) {
+        hideOverlay();
     }
 
     moveCharacter();

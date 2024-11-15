@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tatooine - Star Wars RPG</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body class="tatooine-page" style="background-image: url('{{ url_for('static', filename='tatooine_background.jpg') }}'); background-size: cover; background-position: center;">
+
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" autoplay loop>
+        <source src="{{ url_for('static', filename='tatooine_audio.mp3') }}" type="audio/mpeg">
+        Your browser does not support the audio tag.
+    </audio>
+
+    <!-- Tatooine Planet Information -->
+    <div class="planet-info">
+        <h1>Welcome to Tatooine</h1>
+        <p>Explore the harsh deserts of Tatooine, where danger lurks around every sand dune. Can you survive the challenges that await you?</p>
+    </div>
+
+    <!-- Action Button or Challenges on Tatooine -->
+    <div class="challenges">
+        <button class="challenge-button">Battle Sand People</button>
+        <button class="challenge-button">Explore the Dune Sea</button>
+        <button class="challenge-button">Meet Jawas</button>
+    </div>
+
+    <!-- Back to Game Page Button -->
+    <button onclick="window.location.href='{{ url_for('game_page') }}'" style="position: fixed; bottom: 10px; left: 10px;">Back to Game</button>
+
+</body>
+</html>

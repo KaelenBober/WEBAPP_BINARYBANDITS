@@ -23,18 +23,6 @@ body.title-screen {
     background-color: black;
 }
 
-/* Fullscreen background (moving GIF) */
-.title-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('{{ url_for('static', filename='your-moving-image.gif') }}'); /* Path to your GIF */
-    background-size: cover;
-    background-position: center center;
-    z-index: -1; /* Make sure it stays behind the content */
-}
 
 /* Title Screen Styles */
 body.title-screen {
@@ -217,7 +205,7 @@ form input {
 
 /* Overlay background */
 .overlay {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100vw;
@@ -261,21 +249,7 @@ form input {
     background-color: #eee;
 }
 
-/* Return button styling */
-.return-button {
-    background-color: #ff6347;
-    color: white;
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px; /* Add spacing above the return button */
-}
 
-.return-button:hover {
-    background-color: #ff4a2d;
-}
 /* view the planet trigger */
 .target-zone {
     position: absolute;

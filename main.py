@@ -178,5 +178,10 @@ def game():
     return redirect(url_for('character_creation'))
 
 
+@app.route('/tatooine')
+def tatooine_page():
+    return render_template('tatooine_page.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)

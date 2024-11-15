@@ -18,10 +18,14 @@
             <div class="password-container">
                 <input type="password" id="password" name="password" required><br><br>
                 <!-- Eye icon for password toggle -->
-                <span id="toggleIcon" onclick="togglePasswordVisibility()" style="cursor: pointer;">👁️</span>
+                <span id="toggleIcon" onclick="togglePasswordVisibility()" class="icon">👁️</span>
             </div>
 
-            <button type="submit" class="star-wars-button">Login</button>
+            <!-- Login button with font toggle -->
+            <div class="button-container">
+                <button type="submit" id="loginButton" class="star-wars-button font-toggle">Login</button>
+                <span id="fontToggleIcon" class="icon" onclick="toggleButtonFont()">🔄</span>
+            </div>
         </form>
 
         <p class="star-wars-link">Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
@@ -29,16 +33,21 @@
 
     <script>
         function togglePasswordVisibility() {
-            var passwordField = document.getElementById('password');
-            var toggleIcon = document.getElementById('toggleIcon');
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
 
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
-                toggleIcon.textContent = '👁️‍🗨️'; // Open eye
+                toggleIcon.textContent = '👁️‍🗨️';
             } else {
                 passwordField.type = 'password';
-                toggleIcon.textContent = '👁️'; // Closed eye
+                toggleIcon.textContent = '👁️';
             }
+        }
+
+        function toggleButtonFont() {
+            const loginButton = document.getElementById('loginButton');
+            loginButton.classList.toggle('aurebesh-font');
         }
     </script>
 </body>
