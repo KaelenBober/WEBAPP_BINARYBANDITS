@@ -6,6 +6,13 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'Aurebesh Bold Italic';
+    src: url('/static/aurebesh_bold_italic.otf') format('opentype'); /* Correct path to the font file */
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* Title screen body */
 body.title-screen {
     margin: 0;
@@ -296,3 +303,38 @@ body.shop-page {
     align-items: center;
     justify-content: center;
 }
+
+
+.character-creation-button {
+    font-family: 'Aurebesh Bold Italic', Arial, sans-serif;
+    font-size: 1.5em; /* Adjust font size as needed */
+    background-color: lightblue; /* Background color */
+    color: white; /* Text color */
+    border: none; /* Remove borders */
+    padding: 10px 20px; /* Add some padding */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    text-align: center; /* Center text horizontally */
+    line-height: 1.2; /* Adjust for vertical centering */
+    width: 520px; /* Fixed width */
+    height: 50px; /* Fixed height */
+    display: inline-block; /* Ensure it behaves as a block-level element */
+    overflow: hidden; /* Prevent content overflow */
+    white-space: nowrap; /* Prevent wrapping of text */
+    transition: all 0.3s ease; /* Smooth hover effects */
+
+    /* Positioning */
+    position: fixed; /* Fixed to the viewport */
+    bottom: 10px; /* Adjust distance from the bottom */
+    left: 100px; /* Adjust distance from the left */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Optional shadow for better visibility */
+}
+
+.character-creation-button:hover {
+    font-family: 'StarJedi', Arial, sans-serif;
+    background-color: lightskyblue; /* Darker background on hover */
+    color: black; /* Light gray text */
+    /* Keep the width and height the same */
+}
+
+

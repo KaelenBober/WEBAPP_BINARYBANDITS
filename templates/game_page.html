@@ -31,7 +31,15 @@
 
 
     <!-- Back to Character Creation Button -->
-    <button onclick="window.location.href='{{ url_for('character_creation') }}'" style="position: fixed; bottom: 10px; right: 10px;">Back to Character Creation</button>
+    <button 
+        class="character-creation-button"
+        onclick="window.location.href='{{ url_for('character_creation') }}'"
+        style="position: fixed; bottom: 10px; right: 10px;">
+        Back to Character Creation
+    </button>
+
+
+    
 
     <div id="overlay" class="overlay">
         <div class="overlay-content">
