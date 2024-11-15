@@ -4,7 +4,7 @@ let posY = window.innerHeight / 2;
 const moveSpeed = 10;  // Adjust movement speed
 
 // Set target zone coordinates
-const targetZone = { x: 840, y: 288, width: 168, height: 192};
+const targetZone = { x: 551, y:30, width: 168, height: 130};
 
 // Initialize movement flags for keys
 let movingUp = false;
@@ -69,4 +69,13 @@ function showOverlay() {
     const overlay = document.getElementById('overlay');
     overlay.style.display = 'flex';
 }
+
+// Function to hide the overlay
+function hideOverlay() {
+    const overlay = document.getElementById('overlay');
+    overlay.style.display = 'none';
+}
+
+// Attach event listener to the exit button
+document.getElementById('exitButton').addEventListener('click', hideOverlay);
 

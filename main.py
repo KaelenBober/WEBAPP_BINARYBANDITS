@@ -177,5 +177,6 @@ def game():
     flash("Invalid character data. Please select a valid character.", "error")
     return redirect(url_for('character_creation'))
 
+
 if __name__ == '__main__':
     app.run(debug=True)

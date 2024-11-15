@@ -208,7 +208,6 @@ form input {
     color: #FFD700;
 }
 
-
 /* Overlay background */
 .overlay {
     position: fixed;
@@ -216,23 +215,32 @@ form input {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 255, 0.5); /* Blue hue overlay */
+    background-color: rgba(0, 0, 255, 0.3); /* Blue hue overlay */
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Make sure it’s above other content */
+    z-index: 1000; /* Ensure it’s above other content */
 }
 
-/* Overlay content (buttons) */
+/* Overlay content */
 .overlay-content {
     background-color: rgba(0, 0, 0, 0.8);
     padding: 20px;
     border-radius: 8px;
     display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center;
     gap: 10px;
 }
 
-.overlay-content button {
+/* Planet buttons container */
+.planet-buttons {
+    display: flex;
+    gap: 10px; /* Space between planet buttons */
+}
+
+/* Planet button styling */
+.planet-button {
     background-color: #fff;
     color: #000;
     padding: 10px 20px;
@@ -242,6 +250,49 @@ form input {
     cursor: pointer;
 }
 
-.overlay-content button:hover {
+.planet-button:hover {
     background-color: #eee;
+}
+
+/* Return button styling */
+.return-button {
+    background-color: #ff6347;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px; /* Add spacing above the return button */
+}
+
+.return-button:hover {
+    background-color: #ff4a2d;
+}
+/* view the planet trigger */
+.target-zone {
+    position: absolute;
+    top: 200px; /* Set the top position (adjust as needed) */
+    left: 1000px; /* Set the left position (adjust as needed) */
+    width: 168px; /* Width of the target zone */
+    height: 130px; /* Height of the target zone */
+    background-color: rgba(0, 0, 255, 0.2); /* Semi-transparent blue for the target zone */
+    border: 2px solid rgba(0, 0, 255, 0.6); /* Border for visibility */
+    z-index: 10; /* Ensure it's above the background but below other content */
+}
+
+#movableImage {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    width: 10vw; /* Adjust width relative to the viewport */
+}
+
+body.shop-page {
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

@@ -14,7 +14,10 @@
         <source src="{{ url_for('static', filename='game_audio.mp3') }}" type="audio/mpeg">
         Your browser does not support the audio tag.
     </audio>
-
+    
+    <!-- Target Zone Overlay -->
+    <div id="targetZone" class="target-zone"></div>
+    
     <!-- Movable Image for Character -->
     {% set character_image = {
         'jedi': 'jedi_imagechar.png',
@@ -31,9 +34,14 @@
 
     <div id="overlay" class="overlay">
         <div class="overlay-content">
-            <button>Option 1</button>
-            <button>Option 2</button>
-            <button>Option 3</button>
+            <!-- Container for planet buttons -->
+            <div class="planet-buttons">
+                <button class="planet-button">Hoth</button>
+                <button class="planet-button">Endor</button>
+                <button class="planet-button">Tatooine</button>
+            </div>
+            <!-- Return button positioned below -->
+            <button id="exitButton" class="return-button">Return</button>
         </div>
     </div>
     
