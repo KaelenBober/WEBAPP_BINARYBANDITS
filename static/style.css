@@ -31,7 +31,7 @@ body.title-screen {
 
 /* Title Screen Styles */
 body.title-screen {
-    background-image: url('/static/background.jpg');
+    background-image: url('/static/starwars_background.gif');
     background-size: cover;
     background-position: center;
     height: 100vh;
