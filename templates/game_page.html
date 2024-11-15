@@ -20,12 +20,12 @@
     
     <!-- Movable Image for Character -->
     {% set character_image = {
-        'jedi': 'jedi_imagechar.png',
-        'sith': 'sith_imagechar.jpg',
+        'jedi': 'Jedi_imagechar.png',
+        'sith': 'Sith_imagechar.png',
         'bounty_hunter': 'bounty_hunter_imagechar.png',
         'smuggler': 'smuggler_imagechar.png',
-        'mandalorian': 'mandalorian_imagechar.png',
-        'droid': 'droid_imagechar.png'
+        'mandalorian': 'Mandalorian_imagechar.png',
+        'droid': 'Droid_imagechar.png'
     }[character_type] %}
     <img src="{{ url_for('static', filename=character_image) }}" id="movableImage" alt="Character" style="position: absolute; top: 50%; left: 50%; width: 100px;">
 
