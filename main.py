@@ -181,6 +181,10 @@ def game():
 def tatooine():
     return render_template('tatooine_page.html')
 
+@app.route('/hoth')
+def hoth():
+    return render_template('hoth_page.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
