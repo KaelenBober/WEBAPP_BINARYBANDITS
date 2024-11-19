@@ -44,6 +44,17 @@
             top: 10%;
             opacity: 1;
             white-space: nowrap;
+            transition: opacity 10s ease; /* Add a smooth transition for the fade-out */
+        }
+
+        /* Fade-out animation */
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
         }
 
         /* Button Style */
@@ -83,7 +94,7 @@
             // Set the initial text content
             welcomeTextElement.innerHTML = text;
 
-            // After 5 seconds, change the font to Starjedi letter by letter from right to left
+            // After 2 seconds, change the font to Starjedi letter by letter from right to left
             setTimeout(() => {
                 let reverseIndex = totalLength - 1;
 
@@ -101,12 +112,12 @@
                         clearInterval(fontChangeInterval);  // Stop after all letters are changed
                     }
                 }, 100);  // Adjust speed of font change
-            }, 2000);  // Wait for 5 seconds before starting font change
+            }, 2000);  // Wait for 2 seconds before starting font change
 
             // Start the fade-out after 20 seconds
             setTimeout(() => {
                 welcomeTextElement.style.animation = "fadeOut 10s forwards";  // Start fade-out animation after 20 seconds
-            }, 5000);  // Fade-out starts after 20 seconds
+            }, 7000);  // Fade-out starts after 20 seconds
         });
     </script>
 </body>

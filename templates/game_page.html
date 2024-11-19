@@ -1,4 +1,4 @@
-game<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,7 +14,6 @@ game<!DOCTYPE html>
         Your browser does not support the audio tag.
     </audio>
     
-    
     <!-- Movable Image for Character -->
     {% set character_image = {
         'jedi': 'Jedi_imagechar.png',
@@ -25,7 +24,6 @@ game<!DOCTYPE html>
         'droid': 'Droid_imagechar.png'
     }[character_type] %}
     <img src="{{ url_for('static', filename=character_image) }}" id="movableImage" alt="Character" style="position: absolute; top: 50%; left: 50%; width: 100px;">
-
 
     <!-- Back to Character Creation Button -->
     <button 
@@ -38,17 +36,29 @@ game<!DOCTYPE html>
     <!-- Overlay trigger -->
     <button id="overlayTrigger" class="overlay-trigger">Show Overlay</button>
 
+    <<div id="overlay" class="overlay">
+            <div class="overlay-content">
+                <!-- Container for planet buttons -->
+                <div class="planet-buttons">
+                    <!-- Button with image for Tatooine -->
+                    <div class="planet-button-container">
+                        <img src="{{ url_for('static', filename='tatooine_planet.jpg') }}" alt="Tatooine" class="planet-image">
+                        <button class="planet-button" onclick="goToPlanet('Tatooine')">Tatooine</button>
+                    </div>
 
-    <div id="overlay" class="overlay">
-        <div class="overlay-content">
-            <!-- Container for planet buttons -->
-            <div class="planet-buttons">
-                <button class="planet-button" onclick="goToPlanet('Tatooine')">Tatooine</button>
-                <button class="planet-button" onclick="goToPlanet('Hoth')">Hoth</button>
-                <button class="planet-button" onclick="goToPlanet('Mustafar')">Mustafar</button> 
+                    <!-- Button with image for Hoth -->
+                    <div class="planet-button-container">
+                        <img src="{{ url_for('static', filename='hoth_planet.jpg') }}" alt="Hoth" class="planet-image">
+                        <button class="planet-button" onclick="goToPlanet('Hoth')">Hoth</button>
+                    </div>
+
+                    <!-- Button with image for Mustafar -->
+                    <div class="planet-button-container">
+                        <img src="{{ url_for('static', filename='mustafar_planet.jpg') }}" alt="Mustafar" class="planet-image">
+                        <button class="planet-button" onclick="goToPlanet('Mustafar')">Mustafar</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    
 </body>    
 </html>

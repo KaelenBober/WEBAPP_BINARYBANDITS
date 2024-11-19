@@ -337,23 +337,68 @@ body.shop-page {
     /* Keep the width and height the same */
 }
 
-/*Overlay Trigger*/
+/* Overlay button styles */
 .overlay-trigger {
     position: fixed;
-    top: 10px; /* Distance from the top of the viewport */
+    top: 5%; /* 5% down from the top */
     left: 50%; /* Center horizontally */
     transform: translateX(-50%); /* Offset to center the button */
-    background-color: rgba(255, 255, 0, 0.8); /* Yellow color */
-    color: black;
-    font-size: 1.2rem;
-    padding: 10px 20px;
+    background-color: lightblue; /* Yellow color */
+    color: white;
+    font-size: 1rem;
+    padding: 15px 30px;
     border: none;
-    border-radius: 5px;
+    border-radius: 12px; /* Rectangular octagon shape */
     cursor: pointer;
     z-index: 1000; /* Ensure it appears above other elements */
-    font-family: 'Star Jedi', sans-serif; /* Star Wars font */
+    font-family: 'Aurebesh Bold Italic', sans-serif; /* Aurebesh font */
+    width: 250px;
+    height: 50px;
+    text-align: center;
+    overflow: hidden; /* Prevent text overflow */
+    opacity: 0.8; /* Initial opacity */
+    transition: opacity 0.5s ease; /* Smooth transition for opacity */
 }
 
 .overlay-trigger:hover {
-    background-color: rgba(255, 255, 0, 1); /* Brighten on hover */
+    background-color: lightblue; /* Brighten on hover */
+    font-family: 'StarJedi', sans-serif; /* Change font to Star Jedi */
+    color: black;
+    opacity: 1;
 }
+
+/* Styles for planet button containers */
+.planet-button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+/* Styles for planet images above buttons */
+.planet-image {
+    width: 300px;
+    height: 300px;
+    margin-bottom: 10px;
+}
+
+/* Styles for planet buttons */
+.planet-button {
+    background-color: lightblue; /* Dark background */
+    color: white;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Aurebesh Bold Italic', sans-serif; /* Use Aurebesh font */
+    text-align: center;
+    transition: font-family 0.3s ease, background-color 0.3s ease;
+}
+
+/* On hover, change font and background color */
+.planet-button:hover {
+    background-color: lightblue; /* Yellow hover effect */
+    font-family: 'StarJedi', sans-serif; /* Change font on hover */
+}
+
