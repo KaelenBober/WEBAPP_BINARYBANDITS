@@ -177,9 +177,8 @@ def game():
     flash("Invalid character data. Please select a valid character.", "error")
     return redirect(url_for('character_creation'))
 
-
 @app.route('/tatooine')
-def tatooine_page():
+def tatooine():
     return render_template('tatooine_page.html')
 
 

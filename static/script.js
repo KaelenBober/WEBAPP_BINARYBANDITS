@@ -64,12 +64,18 @@ function hideOverlay() {
 // Attach event listener to the overlay trigger button
 document.getElementById('overlayTrigger').addEventListener('click', showOverlay);
 
-// Optional: If you want to close the overlay when a planet is selected
+// Navigate to the selected planet
 function goToPlanet(planetName) {
     console.log(`You have selected: ${planetName}`);
     hideOverlay();  // Close the overlay when a planet is selected
+
+    // Redirect based on the selected planet
+    if (planetName === 'Tatooine') {
+        window.location.href = '/tatooine';  // Path to the Tatooine page
+    } else if (planetName === 'Hoth') {
+        window.location.href = '/hoth';  // Path to the Hoth page (you can add this page similarly)
+    } else if (planetName === 'Mustafar') {
+        window.location.href = '/mustafar';  // Path to the Mustafar page (you can add this page similarly)
+    }
 }
-
-
-
 
