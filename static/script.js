@@ -3,8 +3,7 @@ let posX = window.innerWidth / 2;
 let posY = window.innerHeight / 2;
 const moveSpeed = 10;  // Adjust movement speed
 
-// Set target zone coordinates
-const targetZone = { x: 551, y:30, width: 168, height: 130};
+
 
 // Initialize movement flags for keys
 let movingUp = false;
@@ -12,8 +11,6 @@ let movingDown = false;
 let movingLeft = false;
 let movingRight = false;
 
-// Add a flag to track if the user is in the target zone
-let inTargetZone = false;
 
 // Listen for key presses and move the character
 document.addEventListener('keydown', function(event) {
@@ -22,14 +19,6 @@ document.addEventListener('keydown', function(event) {
     if (event.key === 's') movingDown = true;
     if (event.key === 'a') movingLeft = true;
     if (event.key === 'd') movingRight = true;
-
-    if (inTargetZone) {
-        showOverlay();
-    }
-
-    if (!inTargetZone) {
-        hideOverlay();
-    }
 
     moveCharacter();
 });
@@ -57,27 +46,30 @@ function moveCharacter() {
     movableImage.style.left = `${posX}px`;
     movableImage.style.top = `${posY}px`;
 
-    // Check if character is in the target zone
-    inTargetZone = (
-        posX >= targetZone.x &&
-        posX <= targetZone.x + targetZone.width &&
-        posY >= targetZone.y &&
-        posY <= targetZone.y + targetZone.height
-    );
 }
 
+// Show the overlay with planet buttons
 function showOverlay() {
     console.log("Overlay triggered"); // Debug line
     const overlay = document.getElementById('overlay');
-    overlay.style.display = 'flex';
+    overlay.style.display = 'flex'; // Show the overlay
 }
 
-// Function to hide the overlay
+// Hide the overlay
 function hideOverlay() {
     const overlay = document.getElementById('overlay');
-    overlay.style.display = 'none';
+    overlay.style.display = 'none'; // Hide the overlay
 }
 
-// Attach event listener to the exit button
-document.getElementById('exitButton').addEventListener('click', hideOverlay);
+// Attach event listener to the overlay trigger button
+document.getElementById('overlayTrigger').addEventListener('click', showOverlay);
+
+// Optional: If you want to close the overlay when a planet is selected
+function goToPlanet(planetName) {
+    console.log(`You have selected: ${planetName}`);
+    hideOverlay();  // Close the overlay when a planet is selected
+}
+
+
+
 

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Wars RPG - Store</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body style="background-image: url('{{ url_for('static', filename='store_background.jpg') }}'); background-size: cover; background-position: center;">
+    <header>
+        <h1 class="store-title">Galactic Trading Post</h1>
+        <p class="store-description">Browse and purchase items to enhance your character's journey!</p>
+    </header>
+
+    <main class="store-container">
+        <!-- Armor Section -->
+        <section class="store-section">
+            <h2>Armor</h2>
+            <div class="store-items">
+                <div class="store-item">
+                    <img src="{{ url_for('static', filename='armor_basic.jpg') }}" alt="Basic Armor">
+                    <p>Basic Armor</p>
+                    <button>Buy (100 credits)</button>
+                </div>
+                <div class="store-item">
+                    <img src="{{ url_for('static', filename='armor_advanced.jpg') }}" alt="Advanced Armor">
+                    <p>Advanced Armor</p>
+                    <button>Buy (300 credits)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Weapons Section -->
+        <section class="store-section">
+            <h2>Weapons</h2>
+            <div class="store-items">
+                <div class="store-item">
+                    <img src="{{ url_for('static', filename='lightsaber.jpg') }}" alt="Lightsaber">
+                    <p>Lightsaber</p>
+                    <button>Buy (500 credits)</button>
+                </div>
+                <div class="store-item">
+                    <img src="{{ url_for('static', filename='blaster.jpg') }}" alt="Blaster">
+                    <p>Blaster</p>
+                    <button>Buy (200 credits)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Health Items Section -->
+        <section class="store-section">
+            <h2>Health Items</h2>
+            <div class="store-items">
+                <div class="store-item">
+                    <img src="{{ url_for('static', filename='health_pack.jpg') }}" alt="Health Pack">
+                    <p>Health Pack</p>
+                    <button>Buy (50 credits)</button>
+                </div>
+                <div class="store-item">
+                    <img src="{{ url_for('static', filename='med_kit.jpg') }}" alt="Med Kit">
+                    <p>Med Kit</p>
+                    <button>Buy (150 credits)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Character Pictures Section -->
+        <section class="store-section">
+            <h2>New Character Pictures</h2>
+            <div class="store-items">
+                <div class="store-item">
+                    <img src="{{ url_for('static', filename='new_character1.jpg') }}" alt="Character Picture 1">
+                    <p>Jedi Knight</p>
+                    <button>Buy (250 credits)</button>
+                </div>
+                <div class="store-item">
+                    <img src="{{ url_for('static', filename='new_character2.jpg') }}" alt="Character Picture 2">
+                    <p>Mandalorian</p>
+                    <button>Buy (250 credits)</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Back Button -->
+    <button 
+        class="back-button"
+        onclick="window.location.href='{{ url_for('game_page') }}'"
+        style="position: fixed; bottom: 10px; left: 10px;">
+        Back to Game
+    </button>
+
+</body>
+</html>

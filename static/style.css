@@ -217,6 +217,44 @@ form input {
     z-index: 1000; /* Ensure it’s above other content */
 }
 
+/* Overlay styles */
+.overlay {
+    display: none;  /* Initially hidden */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 255, 0.7); /* Blue background with some transparency */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.overlay-content {
+    text-align: center;
+    color: white;
+}
+
+.planet-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.planet-button {
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.planet-button:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
 /* Overlay content */
 .overlay-content {
     background-color: rgba(0, 0, 0, 0.8);
@@ -249,18 +287,6 @@ form input {
     background-color: #eee;
 }
 
-
-/* view the planet trigger */
-.target-zone {
-    position: absolute;
-    top: 200px; /* Set the top position (adjust as needed) */
-    left: 1000px; /* Set the left position (adjust as needed) */
-    width: 168px; /* Width of the target zone */
-    height: 130px; /* Height of the target zone */
-    background-color: rgba(0, 0, 255, 0.2); /* Semi-transparent blue for the target zone */
-    border: 2px solid rgba(0, 0, 255, 0.6); /* Border for visibility */
-    z-index: 10; /* Ensure it's above the background but below other content */
-}
 
 #movableImage {
     position: absolute;
@@ -311,4 +337,23 @@ body.shop-page {
     /* Keep the width and height the same */
 }
 
+/*Overlay Trigger*/
+.overlay-trigger {
+    position: fixed;
+    top: 10px; /* Distance from the top of the viewport */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Offset to center the button */
+    background-color: rgba(255, 255, 0, 0.8); /* Yellow color */
+    color: black;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000; /* Ensure it appears above other elements */
+    font-family: 'Star Jedi', sans-serif; /* Star Wars font */
+}
 
+.overlay-trigger:hover {
+    background-color: rgba(255, 255, 0, 1); /* Brighten on hover */
+}
