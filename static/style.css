@@ -85,14 +85,6 @@ button:hover {
     background-color: #ffdc00;
 }
 
-.return-button {
-    background-color: #e74c3c;
-}
-
-.return-button:hover {
-    background-color: #c0392b;
-}
-
 a {
     text-decoration: none;
 }
@@ -287,6 +279,28 @@ form input {
     background-color: #eee;
 }
 
+/* Return Button in Planet overlay */
+.return-button {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: 'Aurebesh Bold Italic', sans-serif; /* Default font */
+    transition: font-family 0.3s ease, transform 0.2s, background-color 0.3s;
+}
+
+.return-button:hover {
+    font-family: 'StarJedi', sans-serif; /* Hover font */
+    background-color: darkred;
+    transform: translateX(-50%) scale(1.1);
+}
 
 #movableImage {
     position: absolute;
@@ -295,14 +309,6 @@ form input {
     width: 10vw; /* Adjust width relative to the viewport */
 }
 
-body.shop-page {
-    height: 100vh;
-    margin: 0;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 
 .character-creation-button {

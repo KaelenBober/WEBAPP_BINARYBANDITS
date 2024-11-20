@@ -23,7 +23,7 @@
         'mandalorian': 'Mandalorian_imagechar.png',
         'droid': 'Droid_imagechar.png'
     }[character_type] %}
-    <img src="{{ url_for('static', filename=character_image) }}" id="movableImage" alt="Character" style="position: absolute; top: 50%; left: 50%; width: 100px;">
+    <img src="{{ url_for('static', filename=character_image) }}" id="movableImage" alt="Character" style="position: absolute; top: 50%; left: 50%; width: 200px;">
 
     <!-- Back to Character Creation Button -->
     <button 
@@ -34,7 +34,9 @@
     </button>
 
     <!-- Overlay trigger -->
-    <button id="overlayTrigger" class="overlay-trigger">Show Overlay</button>
+    <button id="overlayTrigger" class="overlay-trigger">
+        Show Overlay
+    </button>
 
     <<div id="overlay" class="overlay">
             <div class="overlay-content">
@@ -58,6 +60,7 @@
                         <button class="planet-button" onclick="goToPlanet('Mustafar')">Mustafar</button>
                     </div>
                 </div>
+                <button id="returnButton" class="return-button" onclick="hideOverlay()">Return</button>
             </div>
         </div>
 </body>    

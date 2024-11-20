@@ -68,6 +68,7 @@ document.getElementById('overlayTrigger').addEventListener('click', showOverlay)
 function goToPlanet(planetName) {
     console.log(`You have selected: ${planetName}`);
     hideOverlay();  // Close the overlay when a planet is selected
+    
 
     // Redirect based on the selected planet
     if (planetName === 'Tatooine') {
@@ -79,5 +80,9 @@ function goToPlanet(planetName) {
     }
 }
 
+function hideOverlay() {
+    const overlay = document.getElementById('overlay');
+    overlay.style.display = 'none';
+}
 
 
