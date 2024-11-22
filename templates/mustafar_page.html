@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tatooine - Star Wars RPG</title>
+    <title>Mustafar - Star Wars RPG</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         /* Load custom fonts */
@@ -38,23 +38,12 @@
         .welcome-text {
             font-family: 'Aurebesh Bold Italic', sans-serif; /* Start with Aurebesh font */
             font-size: 3em;
-            color: white;
+            color: orange;
             text-align: center;
             position: absolute;
-            top: 10%;
+            top: 20%;
             opacity: 1;
             white-space: nowrap;
-            transition: opacity 10s ease; /* Add a smooth transition for the fade-out */
-        }
-
-        /* Fade-out animation */
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-            }
         }
 
         /* Button Style */
@@ -66,43 +55,35 @@
             border: none;
             cursor: pointer;
             border-radius: 5px;
-            margin: 10px;
+            position: absolute;
+            bottom: 10%;
         }
 
         button:hover {
             background-color: #45a049;
         }
 
-        .button-container {
-            position: absolute;
-            bottom: 10%;
-            display: flex;
-            gap: 20px;
-        }
     </style>
 </head>
-<body class="game-page" style="background-image: url('{{ url_for('static', filename='tatooine_background.jpg') }}'); background-size: cover; background-position: center;">
+<body class="game-page" style="background-image: url('{{ url_for('static', filename='mustafar_background.jpg') }}'); background-size: cover; background-position: center;">
 
     <!-- Scrolling text that changes font and fades away -->
     <div class="welcome-text" id="welcomeText">
-        Welcome to Tatooine
+        Welcome to Mustafar
     </div>
 
-    <div class="button-container">
-        <button onclick="window.location.href='{{ url_for('game') }}'">Return to Game</button>
-        <button onclick="window.location.href='{{ url_for('crossword') }}'">Play Crossword Puzzle</button>
-    </div>
+    <button onclick="window.location.href='{{ url_for('game') }}'">Return to Game</button>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const welcomeTextElement = document.getElementById('welcomeText');
-            const text = 'Welcome to Tatooine';
+            const text = 'Welcome to Mustafar';
             const totalLength = text.length;
 
             // Set the initial text content
             welcomeTextElement.innerHTML = text;
 
-            // After 2 seconds, change the font to Starjedi letter by letter from right to left
+            // After 5 seconds, change the font to Starjedi letter by letter from right to left
             setTimeout(() => {
                 let reverseIndex = totalLength - 1;
 
@@ -120,15 +101,13 @@
                         clearInterval(fontChangeInterval);  // Stop after all letters are changed
                     }
                 }, 100);  // Adjust speed of font change
-            }, 2000);  // Wait for 2 seconds before starting font change
+            }, 5000);  // Wait for 5 seconds before starting font change
 
             // Start the fade-out after 20 seconds
             setTimeout(() => {
                 welcomeTextElement.style.animation = "fadeOut 10s forwards";  // Start fade-out animation after 20 seconds
-            }, 7000);  // Fade-out starts after 7 seconds
+            }, 7000);  // Fade-out starts after 20 seconds
         });
     </script>
-
-
 </body>
 </html>

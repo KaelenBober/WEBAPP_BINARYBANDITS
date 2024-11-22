@@ -1,5 +1,7 @@
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
+import json
+from werkzeug.security import check_password_hash, generate_password_hash
 
 # Initialize the Flask app and configure the database URI
 app = Flask(__name__)
@@ -12,10 +14,29 @@ db = SQLAlchemy(app)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
-
-    def __repr__(self):
-        return f'<User {self.username}>'
+    password_hash = db.Column(db.String(120), nullable=False)  # Store hashed passwords
+    credits = db.Column(db.Integer, default=0)  # Default credits
+    game_state = db.Column(db.Text, default=json.dumps({}))  # Store game state as JSON
+    @property
+    def password(self):
+        raise AttributeError("Password is not a readable attribute.")
+    
+    @password.setter
+    def password(self, raw_password):
+        self.password_hash = generate_password_hash(raw_password)
+    
+    def check_password(self, raw_password):
+        return check_password_hash(self.password_hash, raw_password)
+    
+    # Helper methods to get/set game state
+    def get_game_state(self):
+        return json.loads(self.game_state)
+    
+    def set_game_state(self, state):
+        self.game_state = json.dumps(state)
+    
+def __repr__(self):
+    return f'<User {self.username}>'
 
 # Character model for the database
 class Character(db.Model):
@@ -45,7 +66,8 @@ def login():
 
         # Check if the username exists and the password matches
         user = User.query.filter_by(username=username).first()
-        if user and user.password == password:
+        
+        if user and user.check_password(password):
             session['user_id'] = user.id  # Save user session
             return redirect(url_for('character_creation'))  # Redirect to character creation page
         else:
@@ -67,7 +89,8 @@ def register():
             return render_template('register.html')
 
         # Add the new user to the database
-        new_user = User(username=username, password=password)
+        new_user = User(username=username)
+        new_user.password = password
         db.session.add(new_user)
         db.session.commit()
 
@@ -177,13 +200,64 @@ def game():
     flash("Invalid character data. Please select a valid character.", "error")
     return redirect(url_for('character_creation'))
 
+# Save game state route
+@app.route('/save_game', methods=['POST'])
+def save_game():
+    user_id = session.get('user_id')
+
+    if not user_id:
+        return {"error": "User not logged in"}, 401
+
+    user = User.query.get(user_id)
+
+    if not user:
+        return {"error": "User not found"}, 404
+
+    # Retrieve data from the client
+    new_credits = request.json.get('credits', user.credits)
+    new_game_state = request.json.get('game_state', user.get_game_state())
+
+    # Update user's credits and game state
+    user.credits = new_credits
+    user.set_game_state(new_game_state)
+    db.session.commit()
+
+    return {"message": "Game state saved successfully"}
+
+# Load game state route
+@app.route('/load_game', methods=['GET'])
+def load_game():
+    user_id = session.get('user_id')
+
+    if not user_id:
+        return {"error": "User not logged in"}, 401
+
+    user = User.query.get(user_id)
+
+    if not user:
+        return {"error": "User not found"}, 404
+
+    return {
+        "credits": user.credits,
+        "game_state": user.get_game_state()
+    }
+
 @app.route('/tatooine')
 def tatooine():
     return render_template('tatooine_page.html')
 
+# Tatooine crossword game
+@app.route('/crossword')
+def crossword():
+    return render_template('crossword_page.html')
+
 @app.route('/hoth')
 def hoth():
     return render_template('hoth_page.html')
+
+@app.route('/mustafar')
+def mustafar():
+    return render_template('mustafar_page.html')
 
 
 if __name__ == '__main__':

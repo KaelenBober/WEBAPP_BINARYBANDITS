@@ -86,3 +86,36 @@ function hideOverlay() {
 }
 
 
+function saveGame(credits, gameState) {
+    fetch('/save_game', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            credits: credits,
+            game_state: gameState
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Game state saved:', data);
+    })
+    .catch((error) => {
+        console.error('Error saving game state:', error);
+    });
+}
+
+function loadGame() {
+    fetch('/load_game')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Game state loaded:', data);
+            // Handle game state (credits, etc.)
+        })
+        .catch((error) => {
+            console.error('Error loading game state:', error);
+        });
+}
+
+
