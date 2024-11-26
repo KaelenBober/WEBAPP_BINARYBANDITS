@@ -135,7 +135,7 @@ def character_creation():
 
         # Redirect to the game page after character creation
         flash(f"Character {character_name} created successfully!", "success")
-        return redirect(url_for('game'))
+        return redirect(url_for('character_creation'))
 
     return render_template('character_creation.html', characters=characters, max_characters=False)
 
@@ -264,4 +264,3 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 
-#what the hell is going on
