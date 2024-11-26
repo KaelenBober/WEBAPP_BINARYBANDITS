@@ -66,19 +66,14 @@
             border: none;
             cursor: pointer;
             border-radius: 5px;
-            margin: 10px;
+            position: absolute;
+            bottom: 10%;
         }
 
         button:hover {
             background-color: #45a049;
         }
 
-        .button-container {
-            position: absolute;
-            bottom: 10%;
-            display: flex;
-            gap: 20px;
-        }
     </style>
 </head>
 <body class="game-page" style="background-image: url('{{ url_for('static', filename='tatooine_background.jpg') }}'); background-size: cover; background-position: center;">
@@ -88,10 +83,7 @@
         Welcome to Tatooine
     </div>
 
-    <div class="button-container">
-        <button onclick="window.location.href='{{ url_for('game') }}'">Return to Game</button>
-        <button onclick="window.location.href='{{ url_for('crossword') }}'">Play Crossword Puzzle</button>
-    </div>
+    <button onclick="window.location.href='{{ url_for('game') }}'">Return to Game</button>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
