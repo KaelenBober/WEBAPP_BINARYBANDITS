@@ -48,6 +48,7 @@ function moveCharacter() {
 
 }
 
+
 // Show the overlay with planet buttons
 function showOverlay() {
     console.log("Overlay triggered"); // Debug line

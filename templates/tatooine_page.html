@@ -114,18 +114,45 @@
 
         // Handle keyboard input to move the character
         document.addEventListener('keydown', (event) => {
-            if (event.key === 'w') posY -= moveSpeed;
-            if (event.key === 's') posY += moveSpeed;
-            if (event.key === 'a') posX -= moveSpeed;
-            if (event.key === 'd') posX += moveSpeed;
+            if (event.key === 'w' && posY > 0) {
+                posY -= moveSpeed; // Move up, but not beyond top edge
+            }
+            if (event.key === 's' && posY < canvas.height - 50) {
+                posY += moveSpeed; // Move down, but not beyond bottom edge
+            }
+            if (event.key === 'a' && posX > 0) {
+                posX -= moveSpeed; // Move left, but not beyond left edge
+            }
+            if (event.key === 'd' && posX < canvas.width - 50) {
+                posX += moveSpeed; // Move right, but not beyond right edge
+            }
 
             // Redraw after moving the character
             draw();
         });
 
+        // Function to render background and character
+        function draw() {
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw the background image
+            ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+
+            // Draw the character at its new position (50x50 px)
+            ctx.drawImage(character, posX, posY, 50, 50);
+        }
+
+        // Adjust canvas size dynamically to cover the entire window
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
         // Once the background image is loaded, draw everything
         bgImage.onload = draw;
 
+        
+        
+        
         // Welcome text animation (change font letter by letter)
         document.addEventListener('DOMContentLoaded', function() {
             const welcomeTextElement = document.getElementById('welcomeText');
