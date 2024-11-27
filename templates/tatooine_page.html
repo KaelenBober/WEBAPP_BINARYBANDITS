@@ -6,45 +6,34 @@
     <title>Tatooine - Star Wars RPG</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        /* Load custom fonts */
-        @font-face {
-            font-family: 'Aurebesh Bold Italic';  
-            src: url('{{ url_for('static', filename='aurebesh_bold_italic.otf') }}') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        @font-face {
-            font-family: 'Starjedi';  
-            src: url('{{ url_for('static', filename='Starjedi.ttf') }}') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        /* Body and page styling */
-        body {
+        /* Ensure the canvas covers the entire screen */
+        body, html {
             margin: 0;
             padding: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            background-color: black;
+            height: 100%;
             overflow: hidden;
+            background-color: black;
         }
 
-        /* The container for the text */
+        /* Canvas for game background and objects */
+        #gameCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* The container for the welcome text */
         .welcome-text {
-            font-family: 'Aurebesh Bold Italic', sans-serif; /* Start with Aurebesh font */
+            font-family: 'Aurebesh Bold Italic', sans-serif;
             font-size: 3em;
             color: white;
             text-align: center;
             position: absolute;
-            top: 10%;
+            top: 5%;
+            width: 100%;
             opacity: 1;
-            white-space: nowrap;
-            transition: opacity 10s ease; /* Add a smooth transition for the fade-out */
         }
 
         /* Fade-out animation */
@@ -57,7 +46,6 @@
             }
         }
 
-        /* Button Style */
         button {
             background-color: #4CAF50;
             color: white;
@@ -68,36 +56,88 @@
             border-radius: 5px;
             position: absolute;
             bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         button:hover {
             background-color: #45a049;
         }
-
     </style>
 </head>
-<body class="game-page" style="background-image: url('{{ url_for('static', filename='tatooine_background.jpg') }}'); background-size: cover; background-position: center;">
+<body>
 
-    <!-- Scrolling text that changes font and fades away -->
+    <!-- Canvas for the game -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Welcome text overlay -->
     <div class="welcome-text" id="welcomeText">
         Welcome to Tatooine
     </div>
 
+    <!-- Button to go back to the game -->
     <button onclick="window.location.href='{{ url_for('game') }}'">Return to Game</button>
 
     <script>
+        // Set up the canvas
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas to cover the full window
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Load the background image
+        const bgImage = new Image();
+        bgImage.src = '{{ url_for("static", filename="tatooine_background.jpg") }}';
+
+        // Load character image
+        const character = new Image();
+        character.src = '{{ url_for("static", filename="character_sprite.jpg") }}';
+
+        // Character initial position
+        let posX = canvas.width / 2;
+        let posY = canvas.height / 2;
+        const moveSpeed = 10;
+
+        // Draw function to render background and character
+        function draw() {
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw the background image
+            ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+
+            // Draw the character (scaled to 50x50 px)
+            ctx.drawImage(character, posX, posY, 50, 50);
+        }
+
+        // Handle keyboard input to move the character
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'w') posY -= moveSpeed;
+            if (event.key === 's') posY += moveSpeed;
+            if (event.key === 'a') posX -= moveSpeed;
+            if (event.key === 'd') posX += moveSpeed;
+
+            // Redraw after moving the character
+            draw();
+        });
+
+        // Once the background image is loaded, draw everything
+        bgImage.onload = draw;
+
+        // Welcome text animation (change font letter by letter)
         document.addEventListener('DOMContentLoaded', function() {
             const welcomeTextElement = document.getElementById('welcomeText');
             const text = 'Welcome to Tatooine';
             const totalLength = text.length;
+            let reverseIndex = totalLength - 1;
 
             // Set the initial text content
             welcomeTextElement.innerHTML = text;
 
             // After 2 seconds, change the font to Starjedi letter by letter from right to left
             setTimeout(() => {
-                let reverseIndex = totalLength - 1;
-
                 let fontChangeInterval = setInterval(() => {
                     if (reverseIndex >= 0) {
                         // Get the current letter and update the font
@@ -120,7 +160,5 @@
             }, 7000);  // Fade-out starts after 7 seconds
         });
     </script>
-
-
 </body>
 </html>
