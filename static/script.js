@@ -1,3 +1,11 @@
+// Function to shuffle the trivia questions array
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    }
+}
+
 const movableImage = document.getElementById('movableImage');
 let posX = window.innerWidth / 2;
 let posY = window.innerHeight / 2;
@@ -98,3 +106,9 @@ function playSound(character) {
     }
     sound.play();
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Shuffle the trivia questions before starting the quiz
+    shuffleArray(triviaQuestions);
+    displayQuestion(triviaQuestions[currentQuestionIndex]);
+});

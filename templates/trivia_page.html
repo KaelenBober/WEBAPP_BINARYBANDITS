@@ -130,11 +130,6 @@
                 answer: "A New Hope"
             },
             {
-                question: "Who trained Obi-Wan Kenobi?",
-                options: ["Qui-Gon Jinn", "Yoda", "Anakin Skywalker", "Darth Sidious"],
-                answer: "Qui-Gon Jinn"
-            },
-            {
                 question: "What is the primary weapon of a Jedi?",
                 options: ["Blaster", "Lightsaber", "Vibroblade", "Bowcaster"],
                 answer: "Lightsaber"
@@ -150,9 +145,9 @@
                 answer: "Leia Organa"
             },
             {
-                question: "What is the name of Kylo Ren's super",
-                options: ["Laser Cannon", "Planet Killer", "Death Ray", "Superlaser"],
-                answer: "Superlaser"
+                question: "What is the name of Kylo Ren's super weapon",
+                options: ["Planet Killer", "Star Killer", "Death Ray", "Superlaser"],
+                answer: "Star Killer"
             },
             {
                 question: "Which character says, 'May the Force be with you'?",
@@ -191,6 +186,14 @@
             }
         ];
 
+        // Function to shuffle the trivia questions array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+        }
+
         let currentQuestionIndex = 0; // Track the current question
 
         // Function to display the question and options
@@ -211,35 +214,32 @@
                 optionsContainer.appendChild(optionButton);
             });
 
-            // Clear previous feedback
-            feedbackElement.textContent = '';
+            feedbackElement.innerHTML = ''; // Clear feedback
         }
 
-        // Function to check the answer
+        // Function to check the selected answer
         function checkAnswer(selectedOption, correctAnswer) {
             const feedbackElement = document.getElementById('feedback');
-
             if (selectedOption === correctAnswer) {
-                feedbackElement.textContent = "Correct! Well done!";
-                feedbackElement.style.color = "green";
+                feedbackElement.innerHTML = 'Correct!';
             } else {
-                feedbackElement.textContent = "Oops! Wrong answer. Try again!";
-                feedbackElement.style.color = "red";
+                feedbackElement.innerHTML = 'Incorrect! The correct answer was: ' + correctAnswer;
             }
-
-            // Disable all buttons after selection
-            const options = document.querySelectorAll('.option');
-            options.forEach(button => button.disabled = true);
         }
 
-        // Function to go to the next question
+        // Function to move to the next question
         function nextQuestion() {
-            currentQuestionIndex = (currentQuestionIndex + 1) % triviaQuestions.length;
-            displayQuestion(triviaQuestions[currentQuestionIndex]);
+            currentQuestionIndex++;
+            if (currentQuestionIndex < triviaQuestions.length) {
+                displayQuestion(triviaQuestions[currentQuestionIndex]);
+            } else {
+                alert('You have completed the trivia quiz!');
+            }
         }
 
-        // Initialize the quiz
+        // Start the quiz by shuffling questions
         document.addEventListener('DOMContentLoaded', () => {
+            shuffleArray(triviaQuestions);
             displayQuestion(triviaQuestions[currentQuestionIndex]);
         });
     </script>
