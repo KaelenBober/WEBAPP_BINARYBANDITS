@@ -21,14 +21,15 @@
         .crossword-container {
             display: grid;
             grid-gap: 5px;
+            margin-bottom: 20px;
         }
 
         .crossword-cell {
             width: 50px;
             height: 50px;
-            text-align: center;
-            font-size: 1.5em;
-            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             background-color: white;
             color: black;
             border: 1px solid #ccc;
@@ -52,7 +53,7 @@
         }
 
         button {
-            margin-top: 20px;
+            margin: 10px;
             background-color: #4CAF50;
             color: white;
             padding: 10px 20px;
@@ -65,65 +66,87 @@
         button:hover {
             background-color: #45a049;
         }
+
+        #feedback {
+            margin-top: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        /* Style for the crossword button */
+        #crossword {
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #FFC107;
+            color: black;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #crossword:hover {
+            background-color: #FFA000;
+        }
     </style>
 </head>
 <body>
-    <h1>Crossword Puzzle</h1>
+    <h1>Star Wars Crossword Puzzle</h1>
     <div class="crossword-container" id="crossword"></div>
     <div class="crossword-clues" id="clues"></div>
     <button onclick="checkAnswer()">Submit Answer</button>
-    <p id="feedback" style="margin-top: 10px;"></p>
+    <button onclick="nextPuzzle()">Next Puzzle</button>
+    <p id="feedback"></p>
     <button onclick="window.location.href='{{ url_for('tatooine') }}'">Return to Tatooine</button>
 
     <script>
-        // Define multiple crossword puzzles in an array
         const crosswordPuzzles = [
             {
-                answer: "LUKE", 
+                answer: "LUKE",
                 clue: "Famous Jedi who trained Rey (4 letters)"
             },
             {
-                answer: "HAN", 
+                answer: "HAN",
                 clue: "Smuggler who won the Millennium Falcon in a game of sabacc (3 letters)"
             },
             {
-                answer: "YODA", 
+                answer: "YODA",
                 clue: "A wise Jedi Master who lived in exile (4 letters)"
             }
         ];
 
-        let currentPuzzleIndex = 0; // Track the current puzzle
+        let currentPuzzleIndex = 0;
 
-        function createCrosswordGrid(data) {
+        function createCrosswordGrid(puzzle) {
             const crosswordContainer = document.getElementById('crossword');
             const cluesContainer = document.getElementById('clues');
 
-            // Determine grid size dynamically based on the answer length
-            const gridSize = data.answer.length;
+            const gridSize = puzzle.answer.length;
 
-            // Set up the grid template for the crossword container
+            // Set up the crossword container
             crosswordContainer.style.gridTemplateColumns = `repeat(${gridSize}, 50px)`;
+            crosswordContainer.innerHTML = ''; // Clear any previous grid
+            cluesContainer.innerHTML = ''; // Clear previous clues
 
-            // Clear previous crossword grid and clues
-            crosswordContainer.innerHTML = '';
-            cluesContainer.innerHTML = '';
-
-            // Generate crossword cells
+            // Generate the crossword cells
             for (let i = 0; i < gridSize; i++) {
                 const cell = document.createElement('div');
                 cell.className = 'crossword-cell';
 
                 const input = document.createElement('input');
                 input.type = 'text';
-                input.maxLength = 1; // Allow only one letter
-                input.dataset.index = i; // Store index for validation
+                input.maxLength = 1; // Allow only one letter per cell
+                input.dataset.index = i; // For validation
                 cell.appendChild(input);
                 crosswordContainer.appendChild(cell);
             }
 
-            // Display the clue for the current puzzle
+            // Add the clue
             const clueElement = document.createElement('p');
-            clueElement.innerHTML = `<b>Clue:</b> ${data.clue}`;
+            clueElement.innerHTML = `<b>Clue:</b> ${puzzle.clue}`;
             cluesContainer.appendChild(clueElement);
         }
 
@@ -146,13 +169,12 @@
         }
 
         function nextPuzzle() {
-            // Go to the next puzzle (looping back to the first one if at the end)
             currentPuzzleIndex = (currentPuzzleIndex + 1) % crosswordPuzzles.length;
             createCrosswordGrid(crosswordPuzzles[currentPuzzleIndex]);
-            document.getElementById('feedback').textContent = '';
+            document.getElementById('feedback').textContent = ''; // Clear feedback
         }
 
-        // Initialize the crossword puzzle
+        // Initialize the crossword on page load
         document.addEventListener('DOMContentLoaded', () => {
             createCrosswordGrid(crosswordPuzzles[currentPuzzleIndex]);
         });

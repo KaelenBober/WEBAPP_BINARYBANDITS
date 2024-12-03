@@ -251,6 +251,14 @@ def tatooine():
 def crossword():
     return render_template('crossword_page.html')
 
+@app.route('/tic_tac_toe')
+def tic_tac_toe():
+    return render_template('tic_tac_toe.html')
+
+@app.route('/crossword')
+def crossword():
+    return render_template('crossword_page.html')
+
 @app.route('/hoth')
 def hoth():
     return render_template('hoth_page.html')
@@ -258,7 +266,6 @@ def hoth():
 @app.route('/mustafar')
 def mustafar():
     return render_template('mustafar_page.html')
-
 
 if __name__ == '__main__':
     app.run(debug=True)

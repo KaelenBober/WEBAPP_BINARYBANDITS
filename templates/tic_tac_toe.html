@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe - AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        #gameBoard {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: #34495e;
+            border: 2px solid #ecf0f1;
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .cell.taken {
+            cursor: not-allowed;
+        }
+
+        #gameStatus {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #1abc9c;
+            color: #fff;
+        }
+
+        button:hover {
+            background-color: #16a085;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tic Tac Toe - Play Against AI</h1>
+    <div id="gameBoard"></div>
+    <div id="gameStatus">Player X's turn</div>
+    <button onclick="resetGame()">Restart Game</button>
+
+    <script>
+        const gameBoard = document.getElementById('gameBoard');
+        const gameStatus = document.getElementById('gameStatus');
+        let board = Array(9).fill(null);
+        let currentPlayer = 'X';
+        let isGameOver = false;
+
+        // Create the game board
+        function createBoard() {
+            gameBoard.innerHTML = '';
+            board.forEach((cell, index) => {
+                const cellElement = document.createElement('div');
+                cellElement.classList.add('cell');
+                if (cell) cellElement.classList.add('taken');
+                cellElement.textContent = cell || '';
+                cellElement.addEventListener('click', () => handleCellClick(index));
+                gameBoard.appendChild(cellElement);
+            });
+        }
+
+        // Handle cell clicks
+        function handleCellClick(index) {
+            if (isGameOver || board[index]) return;
+            if (currentPlayer === 'X') {
+                board[index] = currentPlayer;
+                if (checkWinner()) {
+                    gameStatus.textContent = `Player ${currentPlayer} wins!`;
+                    isGameOver = true;
+                } else if (board.every(cell => cell)) {
+                    gameStatus.textContent = 'It\'s a draw!';
+                    isGameOver = true;
+                } else {
+                    currentPlayer = 'O';
+                    gameStatus.textContent = 'AI is thinking...';
+                    setTimeout(aiMove, 500); // AI takes a turn
+                }
+                createBoard();
+            }
+        }
+
+        // AI's move
+        function aiMove() {
+            if (isGameOver) return;
+
+            // Check if AI can win
+            let move = findBestMove('O');
+            if (move === null) {
+                // Block player's win
+                move = findBestMove('X');
+            }
+            if (move === null) {
+                // Pick a random available spot
+                const availableMoves = board
+                    .map((cell, index) => (cell === null ? index : null))
+                    .filter(index => index !== null);
+                move = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+            }
+
+            board[move] = 'O';
+            if (checkWinner()) {
+                gameStatus.textContent = 'AI (O) wins!';
+                isGameOver = true;
+            } else if (board.every(cell => cell)) {
+                gameStatus.textContent = 'It\'s a draw!';
+                isGameOver = true;
+            } else {
+                currentPlayer = 'X';
+                gameStatus.textContent = 'Player X\'s turn';
+            }
+            createBoard();
+        }
+
+        // Find the best move for a given player
+        function findBestMove(player) {
+            const winningCombinations = [
+                [0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                [0, 3, 6],
+                [1, 4, 7],
+                [2, 5, 8],
+                [0, 4, 8],
+                [2, 4, 6]
+            ];
+            for (const combination of winningCombinations) {
+                const [a, b, c] = combination;
+                if (
+                    board[a] === player &&
+                    board[b] === player &&
+                    board[c] === null
+                ) return c;
+                if (
+                    board[a] === player &&
+                    board[c] === player &&
+                    board[b] === null
+                ) return b;
+                if (
+                    board[b] === player &&
+                    board[c] === player &&
+                    board[a] === null
+                ) return a;
+            }
+            return null;
+        }
+
+        // Check for a winner
+        function checkWinner() {
+            const winningCombinations = [
+                [0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                [0, 3, 6],
+                [1, 4, 7],
+                [2, 5, 8],
+                [0, 4, 8],
+                [2, 4, 6]
+            ];
+            return winningCombinations.some(combination =>
+                combination.every(index => board[index] === currentPlayer)
+            );
+        }
+
+        // Reset the game
+        function resetGame() {
+            board = Array(9).fill(null);
+            currentPlayer = 'X';
+            isGameOver = false;
+            gameStatus.textContent = 'Player X\'s turn';
+            createBoard();
+        }
+
+        // Initialize the game
+        createBoard();
+    </script>
+</body>
+</html>
