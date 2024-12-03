@@ -69,6 +69,11 @@
         button:hover {
             background-color: #45a049;
         }
+
+        .counter {
+            font-size: 1.5em;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -77,12 +82,11 @@
         <div class="question" id="question"></div>
         <div class="options" id="options"></div>
         <div class="feedback" id="feedback"></div>
-        <button onclick="nextQuestion()">Next Question</button>
+        <div class="counter" id="counter">Correct Answers: 0 / 5</div>
     </div>
     <button onclick="window.location.href='{{ url_for('tatooine') }}'">Return to Tatooine</button>
 
     <script>
-        // Define multiple-choice trivia questions
         const triviaQuestions = [
             {
                 question: "Who is Luke Skywalker's father?",
@@ -126,8 +130,13 @@
             },
             {
                 question: "Which Star Wars movie was released first?",
-                options: ["The Empire Strikes Back", "A New Hope", "Return of the Jedi", "The Phantom Menace"],
+                options: ["The Empire Strikes Back", "Return of the Jedi", "A New Hope", "The Phantom Menace"],
                 answer: "A New Hope"
+            },
+            {
+                question: "Who trained Obi-Wan Kenobi?",
+                options: ["Qui-Gon Jinn", "Yoda", "Anakin Skywalker", "Darth Sidious"],
+                answer: "Qui-Gon Jinn"
             },
             {
                 question: "What is the primary weapon of a Jedi?",
@@ -141,13 +150,13 @@
             },
             {
                 question: "What is the name of Luke Skywalker's sister?",
-                options: ["Leia Organa", "Padmé Amidala", "Rey", "Ahsoka Tano"],
+                options: ["Ray", "Padmé Amidala", "Leia Organa", "Ahsoka Tano"],
                 answer: "Leia Organa"
             },
             {
-                question: "What is the name of Kylo Ren's super weapon",
-                options: ["Planet Killer", "Star Killer", "Death Ray", "Superlaser"],
-                answer: "Star Killer"
+                question: "What is the name of Kylo Ren's super",
+                options: ["Laser Cannon", "Planet Killer", "Death Ray", "Superlaser"],
+                answer: "Superlaser"
             },
             {
                 question: "Which character says, 'May the Force be with you'?",
@@ -156,7 +165,7 @@
             },
             {
                 question: "What species is the character Jar Jar Binks?",
-                options: ["Gungan", "Rodian", "Wookiee", "Muun"],
+                options: ["Muun", "Rodian", "Wookiee", "Gungan"],
                 answer: "Gungan"
             },
             {
@@ -171,7 +180,7 @@
             },
             {
                 question: "What planet was destroyed by the first Death Star?",
-                options: ["Alderaan", "Coruscant", "Tatooine", "Endor"],
+                options: ["Tatooine", "Coruscant", "Alderaan", "Endor"],
                 answer: "Alderaan"
             },
             {
@@ -186,17 +195,18 @@
             }
         ];
 
-        // Function to shuffle the trivia questions array
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+                [array[i], array[j]] = [array[j], array[i]];
             }
+            return array;
         }
 
-        let currentQuestionIndex = 0; // Track the current question
+        let shuffledQuestions = shuffleArray([...triviaQuestions]);
+        let currentQuestionIndex = 0;
+        let correctAnswersCount = 0;
 
-        // Function to display the question and options
         function displayQuestion(questionData) {
             const questionElement = document.getElementById('question');
             const optionsContainer = document.getElementById('options');
@@ -205,7 +215,6 @@
             questionElement.innerHTML = questionData.question;
             optionsContainer.innerHTML = '';
 
-            // Display options as buttons
             questionData.options.forEach(option => {
                 const optionButton = document.createElement('button');
                 optionButton.classList.add('option');
@@ -214,33 +223,48 @@
                 optionsContainer.appendChild(optionButton);
             });
 
-            feedbackElement.innerHTML = ''; // Clear feedback
+            feedbackElement.innerHTML = '';
         }
 
-        // Function to check the selected answer
+        function updateCounter() {
+            const counterElement = document.getElementById('counter');
+            counterElement.innerText = `Correct Answers: ${correctAnswersCount} / 5`;
+        }
+
         function checkAnswer(selectedOption, correctAnswer) {
             const feedbackElement = document.getElementById('feedback');
             if (selectedOption === correctAnswer) {
+                correctAnswersCount++;
                 feedbackElement.innerHTML = 'Correct!';
+                updateCounter();
+
+                if (correctAnswersCount >= 5) {
+                    setTimeout(() => {
+                        alert("Congratulations! You've beat the trivia!");
+                        window.location.href = "{{ url_for('tatooine') }}";
+                    }, 500);
+                    return;
+                }
             } else {
                 feedbackElement.innerHTML = 'Incorrect! The correct answer was: ' + correctAnswer;
             }
+
+            setTimeout(nextQuestion, 1000);
         }
 
-        // Function to move to the next question
         function nextQuestion() {
             currentQuestionIndex++;
-            if (currentQuestionIndex < triviaQuestions.length) {
-                displayQuestion(triviaQuestions[currentQuestionIndex]);
-            } else {
-                alert('You have completed the trivia quiz!');
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                displayQuestion(shuffledQuestions[currentQuestionIndex]);
+            } else if (correctAnswersCount < 5) {
+                alert('You have completed the trivia quiz, but didn’t answer enough questions correctly to win.');
+                window.location.href = "{{ url_for('tatooine') }}";
             }
         }
 
-        // Start the quiz by shuffling questions
         document.addEventListener('DOMContentLoaded', () => {
-            shuffleArray(triviaQuestions);
-            displayQuestion(triviaQuestions[currentQuestionIndex]);
+            displayQuestion(shuffledQuestions[currentQuestionIndex]);
+            updateCounter();
         });
     </script>
 </body>
