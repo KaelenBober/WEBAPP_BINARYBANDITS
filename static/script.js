@@ -87,3 +87,14 @@ function hideOverlay() {
 }
 
 
+function playSound(character) {
+    let sound;
+    if (character === 'jedi') {
+        sound = new Audio('{{ url_for("static", filename="lightsaber.wav") }}');
+    } else if (character === 'sith') {
+        sound = new Audio('{{ url_for("static", filename="darth_vader_breathing.wav") }}');
+    } else if (character === 'droid') {
+        sound = new Audio('{{ url_for("static", filename="droid_move.wav") }}');
+    }
+    sound.play();
+}

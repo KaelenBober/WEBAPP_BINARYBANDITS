@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Wars RPG - Battle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Custom Star Wars title font */
+        @font-face {
+            font-family: 'StarWarsTitle';
+            src: url('{{ url_for('static', filename='Starjedi.ttf') }}') format('truetype');
+        }
+
+        body {
+            background-color: #000000;
+            color: #f0f0f0;
+            font-family: 'StarWarsTitle', sans-serif;
+            text-align: center;
+        }
+
+        .health-bar-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 10px 0;
+        }
+
+        .health-bar {
+            width: 200px;
+            height: 20px;
+            background-color: #555;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .health-bar-inner {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .health-bar-player {
+            background-color: #00ff00; /* Green for player */
+        }
+
+        .health-bar-enemy {
+            background-color: #ff0000; /* Red for enemy */
+        }
+
+        .character-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 50px 100px;
+        }
+
+        .character {
+            position: relative;
+            width: 200px;
+            height: 300px;
+        }
+
+        .character img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .character-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+
+        .action-button {
+            background-color: #ffcc00;
+            color: #000;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .action-button:hover {
+            background-color: #ff9900;
+        }
+
+        .battle-info {
+            font-size: 1.2rem;
+            color: #fff;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Star Wars RPG Battle</h1>
+
+    <div class="health-bar-container">
+        <!-- Player Health Bar -->
+        <div class="health-bar">
+            <div id="playerHealthBar" class="health-bar-inner health-bar-player" style="width: 100%"></div>
+        </div>
+        <!-- Enemy Health Bar -->
+        <div class="health-bar">
+            <div id="enemyHealthBar" class="health-bar-inner health-bar-enemy" style="width: 100%"></div>
+        </div>
+    </div>
+
+    <div class="character-container">
+        <!-- Enemy Character -->
+        <div class="character">
+            <div class="character-name" id="enemyName">Enemy</div>
+            <img src="{{ url_for('static', filename='enemy_image.jpg') }}" alt="Enemy">
+        </div>
+
+        <!-- Player Character -->
+        <div class="character">
+            <div class="character-name" id="playerName">{{ player_name }}</div>
+            <img src="{{ url_for('static', filename=player_image) }}" alt="Player">
+        </div>
+    </div>
+
+    <div class="battle-info">
+        <p>Choose your action:</p>
+        <button class="action-button" onclick="attack()">Attack</button>
+        <button class="action-button" onclick="defend()">Defend</button>
+        <button class="action-button" onclick="useItem()">Use Item</button>
+    </div>
+
+    <script>
+        // Example health values for player and enemy
+        let playerHealth = 100;
+        let enemyHealth = 100;
+
+        // Update health bars on screen
+        function updateHealthBars() {
+            document.getElementById('playerHealthBar').style.width = playerHealth + '%';
+            document.getElementById('enemyHealthBar').style.width = enemyHealth + '%';
+        }
+
+        // Attack function (player's turn)
+        function attack() {
+            // Reduce enemy health by a fixed amount
+            enemyHealth -= 10;
+            if (enemyHealth < 0) enemyHealth = 0;
+            // Update health bars
+            updateHealthBars();
+            checkBattleOutcome();
+            // Trigger enemy attack after player's turn
+            setTimeout(enemyAttack, 1000); // AI attack after 1 second
+        }
+
+        // Defend function (player's turn)
+        function defend() {
+            // Just an example where defending reduces incoming damage
+            playerHealth += 5; // Defend gives a little health back
+            if (playerHealth > 100) playerHealth = 100; // Cap health to 100
+            updateHealthBars();
+            // Trigger enemy attack after player's turn
+            setTimeout(enemyAttack, 1000); // AI attack after 1 second
+        }
+
+        // Use item function (player's turn)
+        function useItem() {
+            // Example item usage
+            playerHealth += 10; // Use item to heal player
+            if (playerHealth > 100) playerHealth = 100;
+            updateHealthBars();
+            // Trigger enemy attack after player's turn
+            setTimeout(enemyAttack, 1000); // AI attack after 1 second
+        }
+
+        // Enemy Attack function (AI turn)
+        function enemyAttack() {
+            let damage = Math.floor(Math.random() * 20) + 5;  // Random damage between 5 and 25
+            playerHealth -= damage;
+            if (playerHealth < 0) playerHealth = 0;
+            updateHealthBars();
+            checkBattleOutcome();
+        }
+
+        // Check if the battle is over
+        function checkBattleOutcome() {
+            if (enemyHealth === 0) {
+                alert('You have defeated the enemy!');
+            } else if (playerHealth === 0) {
+                alert('You have been defeated!');
+            }
+        }
+
+        // Initial health bar setup
+        updateHealthBars();
+    </script>
+</body>
+</html>

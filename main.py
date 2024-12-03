@@ -1,7 +1,7 @@
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
-import json
 from werkzeug.security import check_password_hash, generate_password_hash
+import json
 
 # Initialize the Flask app and configure the database URI
 app = Flask(__name__)
@@ -246,18 +246,25 @@ def load_game():
 def tatooine():
     return render_template('tatooine_page.html')
 
-# Tatooine crossword game
-@app.route('/crossword')
-def crossword():
-    return render_template('crossword_page.html')
-
 @app.route('/tic_tac_toe')
 def tic_tac_toe():
     return render_template('tic_tac_toe.html')
 
-@app.route('/crossword')
+@app.route('/trivia')
 def crossword():
-    return render_template('crossword_page.html')
+    return render_template('trivia_page.html')
+
+
+
+@app.route('/battle')
+def battle():
+    # Example: Assume player_image and player_name were set during character creation
+    player_image = session.get('player_image', 'default_player_image.jpg')  # Default image if not set
+    player_name = session.get('player_name', 'Player')  # Default name if not set
+
+    # Pass the player image and other info to the template
+    return render_template('battle.html', player_image=player_image, player_name=player_name)
+
 
 @app.route('/hoth')
 def hoth():

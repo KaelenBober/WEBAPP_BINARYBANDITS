@@ -46,7 +46,7 @@
             }
         }
 
-        /* Button Styling */
+        /* Button styles */
         button {
             background-color: #4CAF50;
             color: white;
@@ -56,33 +56,31 @@
             cursor: pointer;
             border-radius: 5px;
             position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         button:hover {
             background-color: #45a049;
         }
 
-        /* Positioning the Return to Game button */
+        /* Positioning the buttons */
+        #ticTacToeButton {
+            bottom: 40%;
+        }
+
+        #crossword {
+            bottom: 30%;
+        }
+
+        #rpsButton {
+            bottom: 20%;
+        }
+
+        /* Return to game button at the bottom */
         #returnButton {
             bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
         }
-
-        /* Positioning the Tic Tac Toe button */
-        #ticTacToeButton {
-            left: 10%;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        /* Positioning the Crossword button */
-        #crosswordButton {
-            left: 10%;
-            top: 60%;
-            transform: translateY(-50%);
-        }
-
     </style>
 </head>
 <body>
@@ -100,9 +98,12 @@
 
     <!-- Button to launch Tic Tac Toe -->
     <button id="ticTacToeButton" onclick="window.location.href='{{ url_for('tic_tac_toe') }}'">Play Tic Tac Toe</button>
-
+    
     <!-- Button to launch crossword -->
-    <button id="crosswordButton" onclick="window.location.href='{{ url_for('crossword') }}'">Play Crossword</button>
+    <button id="crossword" onclick="window.location.href='{{ url_for('crossword') }}'">Play Crossword</button>
+    
+    <!-- Button to launch RPS game -->
+    <button id="rpsButton" onclick="window.location.href='{{ url_for('battle') }}'">Fight Boss</button>
 
     <script>
         // Set up the canvas
@@ -157,9 +158,58 @@
             draw();
         });
 
+        // Function to render background and character
+        function draw() {
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw the background image
+            ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+
+            // Draw the character at its new position (50x50 px)
+            ctx.drawImage(character, posX, posY, 50, 50);
+        }
+
+        // Adjust canvas size dynamically to cover the entire window
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
         // Once the background image is loaded, draw everything
         bgImage.onload = draw;
 
+        // Welcome text animation (change font letter by letter)
+        document.addEventListener('DOMContentLoaded', function() {
+            const welcomeTextElement = document.getElementById('welcomeText');
+            const text = 'Welcome to Tatooine';
+            const totalLength = text.length;
+            let reverseIndex = totalLength - 1;
+
+            // Set the initial text content
+            welcomeTextElement.innerHTML = text;
+
+            // After 2 seconds, change the font to Starjedi letter by letter from right to left
+            setTimeout(() => {
+                let fontChangeInterval = setInterval(() => {
+                    if (reverseIndex >= 0) {
+                        // Get the current letter and update the font
+                        let currentLetter = welcomeTextElement.innerHTML[reverseIndex];
+                        welcomeTextElement.innerHTML = 
+                            welcomeTextElement.innerHTML.slice(0, reverseIndex) + 
+                            `<span style="font-family: 'Starjedi', sans-serif">${currentLetter}</span>` + 
+                            welcomeTextElement.innerHTML.slice(reverseIndex + 1);
+
+                        reverseIndex--;
+                    } else {
+                        clearInterval(fontChangeInterval);  // Stop after all letters are changed
+                    }
+                }, 100);  // Adjust speed of font change
+            }, 2000);  // Wait for 2 seconds before starting font change
+
+            // Start the fade-out after 20 seconds
+            setTimeout(() => {
+                welcomeTextElement.style.animation = "fadeOut 10s forwards";  // Start fade-out animation after 20 seconds
+            }, 7000);  // Fade-out starts after 7 seconds
+        });
     </script>
 
 </body>
