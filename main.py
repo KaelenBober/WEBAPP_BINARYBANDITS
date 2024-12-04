@@ -167,21 +167,21 @@ def select_character(character_id):
 
     if user_id is None:
         flash("Please log in to select a character.", "error")
-        return redirect(url_for('login'))  # Redirect to login if user is not logged in
+        return redirect(url_for('login'))  # Redirect to login if not logged in
 
     # Fetch the selected character
     character = Character.query.get(character_id)
 
     # Ensure the character belongs to the logged-in user
     if character and character.user_id == user_id:
-        # Save the character selection in the session
         session['selected_character_id'] = character.id
         session['character_type'] = character.character_type  # Save character_type to session
         flash(f"Character {character.name} selected!", "success")
         return redirect(url_for('game'))  # Redirect to the game page
 
     flash("Invalid character selection.", "error")
-    return redirect(url_for('character_creation'))  # Redirect back to character creation if something goes wrong
+    return redirect(url_for('character_creation'))
+
     
 @app.route('/minigame_reward', methods=['POST'])
 def minigame_reward():
@@ -254,7 +254,10 @@ def game():
     if not user:
         return "User not found", 404
 
-    return render_template('game_page.html', user=user)
+    # Get the character type from the session
+    character_type = session.get('character_type', 'jedi')  # Default to 'jedi' if not set
+    return render_template('game_page.html', user=user, character_type=character_type)
+
 
 # Save game state route
 @app.route('/save_game', methods=['POST'])
@@ -322,6 +325,7 @@ def battle():
     return render_template('battle.html', player_image=player_image, player_name=player_name)
 
 
+
 @app.route('/hoth')
 def hoth():
     return render_template('hoth_page.html')
@@ -334,3 +338,57 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 
+# @app.route('/upgrade_stats', methods=['POST'])
+# def upgrade_stats():
+#     user_id = session.get('user_id')
+#     selected_character_id = session.get('selected_character_id')
+#
+#     if not user_id:
+#         return {"error": "User not logged in"}, 401
+#
+#     if not selected_character_id:
+#         return {"error": "No character selected"}, 400
+#
+#     # Fetch the user and character
+#     user = User.query.get(user_id)
+#     character = Character.query.get(selected_character_id)
+#
+#     if not user or not character or character.user_id != user_id:
+#         return {"error": "Character not found or not owned by user"}, 404
+#
+#     # Get the stat and cost from the request
+#     stat = request.json.get('stat')
+#     cost = request.json.get('cost')
+#
+#     # Validate input
+#     if not stat or not cost:
+#         return {"error": "Invalid input"}, 400
+#
+#     # Check if the user has enough credits
+#     if user.credits < cost:
+#         return {"error": "Not enough credits"}, 400
+#
+#     # Deduct credits and upgrade the stat
+#     user.credits -= cost
+#     if stat == 'health':
+#         character.health += 10
+#     elif stat == 'attack':
+#         character.attack += 5
+#     elif stat == 'defense':
+#         character.defense += 5
+#     else:
+#         return {"error": "Invalid stat"}, 400
+#
+#     # Commit changes to the database
+#     db.session.commit()
+#
+#     return {
+#         "message": f"Successfully upgraded {stat}!",
+#         "credits": user.credits,
+#         "character_stats": {
+#             "health": character.health,
+#             "attack": character.attack,
+#             "defense": character.defense,
+#         }
+#     }
+# 
