@@ -176,6 +176,9 @@
             endGameMessage.style.display = 'flex';
             messageText.textContent = message;
             if (playerWon) {
+                console.log("Player won, triggering credit award...");
+                // Call the onGameWin function if the player wins
+                onGameWin();
                 document.getElementById('restartButton').style.display = 'none';
             } else {
                 document.getElementById('restartButton').style.display = 'inline-block';
@@ -237,28 +240,36 @@
         }
         // Assuming you already have game logic to check for a winner, 
         // call this function when a player wins
-        function onGameWin(winner) {
+        function onGameWin() {
             // Get the current user ID from session storage (or use another method to access it)
             let userId = sessionStorage.getItem('user_id');
+            console.log("User ID: ", userId);  // Log the user ID
 
             // If the winner is the user, award credits
-            if (winner === 'user') {
-                // Create a POST request to add credits
+            if (userId) {
                 fetch('/minigame_reward', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        reward: 5  // Example reward of 5 credits
+                        reward: 10  // Example reward of 10 credits
                     })
                 })
                 .then(response => response.json())
                 .then(data => {
-                    // Show a message to the player with the updated credits
-                    alert(`You won the game! You earned 5 credits! Your total credits: ${data.credits}`);
+                    console.log('Response from server:', data);  // Log the server response
+                    if (data.credits) {
+                        alert(`You won the game! You earned 10 credits! Your total credits: ${data.credits}`);
+                    } else {
+                        console.error('No credits returned from server.');
+                    }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            } else {
+                console.log("User is not logged in.");
             }
         }
 

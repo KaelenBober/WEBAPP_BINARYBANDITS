@@ -54,40 +54,48 @@
             }
         }
 
-        /* Button styles */
+
+        /* Star Wars-style buttons */
         button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            font-size: 1em;
-            border: none;
+            background-color: black;
+            color: #FFD700; /* Golden yellow text */
+            font-family: 'Starjedi', sans-serif;
+            font-size: 1.2em;
+            border: 2px solid #FFD700;
+            padding: 15px 30px;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #FFD700;
+            transition: all 0.3s ease-in-out;
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #FFD700;
+            color: black;
+            box-shadow: 0 0 25px #FFD700, 0 0 50px #FFD700;
         }
 
-        /* Positioning the buttons */
+        /* Specific button positions */
         #ticTacToeButton {
-            bottom: 40%;
+            top: 30%;
+            left: 10%;
         }
 
         #crossword {
-            bottom: 30%;
+            top: 50%;
+            left: 10%;
         }
 
         #rpsButton {
-            bottom: 20%;
+            top: 70%;
+            left: 10%;
         }
 
-        /* Return to game button at the bottom */
         #returnButton {
-            bottom: 10%;
+            top: 90%;
+            left: 90%;
+            transform: translate(-50%, -50%);
         }
     </style>
 </head>

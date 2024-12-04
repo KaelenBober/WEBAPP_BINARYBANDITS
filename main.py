@@ -185,42 +185,60 @@ def select_character(character_id):
     
 @app.route('/minigame_reward', methods=['POST'])
 def minigame_reward():
+    # Ensure the user is logged in
     user_id = session.get('user_id')
+    if user_id is None:
+        print("Error: User not logged in.")  # Log error if user is not logged in
+        return {'error': 'User not logged in'}, 400
 
-    if not user_id:
-        return {"error": "User not logged in"}, 401
+    # Get the reward amount from the request
+    data = request.get_json()
+    reward = data.get('reward', 0)
 
+    if reward <= 0:
+        print("Error: Invalid reward amount.")  # Log invalid reward
+        return {'error': 'Invalid reward amount'}, 400
+
+    # Find the user in the database
     user = User.query.get(user_id)
-
     if not user:
-        return {"error": "User not found"}, 404
+        print(f"Error: User with ID {user_id} not found.")  # Log if user is not found
+        return {'error': 'User not found'}, 404
 
-    # Retrieve the reward amount from the request
-    reward_amount = request.json.get('reward', 0)
-
-    # Update user's credits
-    user.credits += reward_amount
+    # Update the user's credits
+    user.credits += reward
     db.session.commit()
 
-    return {"message": f"You've earned {reward_amount} credits!", "credits": user.credits}
+    print(f"User {user_id} credits updated to {user.credits}.")  # Log credits update
 
-
+    # Return the updated credits as a response
+    return {'credits': user.credits}, 200
 
 @app.route('/upgrade_stats', methods=['POST'])
 def upgrade_stats():
     user_id = session.get('user_id')
+    selected_character_id = session.get('selected_character_id')
 
     if not user_id:
         return {"error": "User not logged in"}, 401
 
-    user = User.query.get(user_id)
+    if not selected_character_id:
+        return {"error": "No character selected"}, 400
 
-    if not user:
-        return {"error": "User not found"}, 404
+    # Fetch the user and character
+    user = User.query.get(user_id)
+    character = Character.query.get(selected_character_id)
+
+    if not user or not character or character.user_id != user_id:
+        return {"error": "Character not found or not owned by user"}, 404
 
     # Get the stat and cost from the request
     stat = request.json.get('stat')
     cost = request.json.get('cost')
+
+    # Validate input
+    if not stat or not cost:
+        return {"error": "Invalid input"}, 400
 
     # Check if the user has enough credits
     if user.credits < cost:
@@ -229,17 +247,25 @@ def upgrade_stats():
     # Deduct credits and upgrade the stat
     user.credits -= cost
     if stat == 'health':
-        user.health += 10
+        character.health += 10
     elif stat == 'attack':
-        user.attack += 5
+        character.attack += 5
     elif stat == 'defense':
-        user.defense += 5
+        character.defense += 5
+    else:
+        return {"error": "Invalid stat"}, 400
 
+    # Commit changes to the database
     db.session.commit()
 
     return {
         "message": f"Successfully upgraded {stat}!",
-        "credits": user.credits
+        "credits": user.credits,
+        "character_stats": {
+            "health": character.health,
+            "attack": character.attack,
+            "defense": character.defense,
+        }
     }
 
 
@@ -361,32 +387,32 @@ if __name__ == '__main__':
 # def upgrade_stats():
 #     user_id = session.get('user_id')
 #     selected_character_id = session.get('selected_character_id')
-#
+
 #     if not user_id:
 #         return {"error": "User not logged in"}, 401
-#
+
 #     if not selected_character_id:
 #         return {"error": "No character selected"}, 400
-#
+
 #     # Fetch the user and character
 #     user = User.query.get(user_id)
 #     character = Character.query.get(selected_character_id)
-#
+
 #     if not user or not character or character.user_id != user_id:
 #         return {"error": "Character not found or not owned by user"}, 404
-#
+
 #     # Get the stat and cost from the request
 #     stat = request.json.get('stat')
 #     cost = request.json.get('cost')
-#
+
 #     # Validate input
 #     if not stat or not cost:
 #         return {"error": "Invalid input"}, 400
-#
+
 #     # Check if the user has enough credits
 #     if user.credits < cost:
 #         return {"error": "Not enough credits"}, 400
-#
+
 #     # Deduct credits and upgrade the stat
 #     user.credits -= cost
 #     if stat == 'health':
@@ -397,10 +423,10 @@ if __name__ == '__main__':
 #         character.defense += 5
 #     else:
 #         return {"error": "Invalid stat"}, 400
-#
+
 #     # Commit changes to the database
 #     db.session.commit()
-#
+
 #     return {
 #         "message": f"Successfully upgraded {stat}!",
 #         "credits": user.credits,

@@ -407,3 +407,32 @@ form input {
     background-color: lightblue; /* Yellow hover effect */
     font-family: 'StarJedi', sans-serif; /* Change font on hover */
 }
+
+.overlay-trigger2 {
+    position: fixed;
+    bottom: 10px; /* 10px up from the bottom */
+    right: 10px; /* Center horizontally */
+    transform: translateX(-50%); /* Offset to center the button */
+    background-color: lightblue; /* Yellow color */
+    color: white;
+    font-size: 1rem;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 12px; /* Rectangular octagon shape */
+    cursor: pointer;
+    z-index: 1000; /* Ensure it appears above other elements */
+    font-family: 'Aurebesh Bold Italic', sans-serif; /* Aurebesh font */
+    width: 250px;
+    height: 50px;
+    text-align: center;
+    overflow: hidden; /* Prevent text overflow */
+    opacity: 1;
+    
+}
+
+.overlay-trigger2:hover {
+    background-color: lightblue; /* Brighten on hover */
+    font-family: 'StarJedi', sans-serif; /* Change font to Star Jedi */
+    color: black;
+    opacity: 1;
+}
