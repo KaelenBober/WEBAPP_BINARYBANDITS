@@ -317,12 +317,31 @@ def crossword():
 
 @app.route('/battle')
 def battle():
-    # Example: Assume player_image and player_name were set during character creation
-    player_image = session.get('player_image', 'default_player_image.jpg')  # Default image if not set
+    user_id = session.get('user_id')
+    character_type = session.get('character_type', 'jedi')  # Default to 'jedi' if not set
+
+    if not user_id:
+        flash("Please log in to play the battle.", "error")
+        return redirect(url_for('login'))
+
+    # Map character_type to corresponding image
+    character_image_mapping = {
+        'jedi': 'Jedi_imagechar.png',
+        'sith': 'Sith_imagechar.png',
+        'bounty_hunter': 'bounty_hunter_imagechar.png',
+        'smuggler': 'smuggler_imagechar.png',
+        'mandalorian': 'Mandalorian_imagechar.png',
+        'droid': 'Droid_imagechar.png',
+    }
+
+    # Get the player image or fallback to a default
+    player_image = character_image_mapping.get(character_type, 'default_imagechar.png')
+
+    # Get player name or fallback to a default
     player_name = session.get('player_name', 'Player')  # Default name if not set
 
-    # Pass the player image and other info to the template
     return render_template('battle.html', player_image=player_image, player_name=player_name)
+
 
 
 
@@ -391,4 +410,4 @@ if __name__ == '__main__':
 #             "defense": character.defense,
 #         }
 #     }
-# 
+#  https://chatgpt.com/share/674fb567-b0e0-8012-a916-1ad96ffd79e6
