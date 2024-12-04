@@ -235,6 +235,32 @@
             }
             return false;
         }
+        // Assuming you already have game logic to check for a winner, 
+        // call this function when a player wins
+        function onGameWin(winner) {
+            // Get the current user ID from session storage (or use another method to access it)
+            let userId = sessionStorage.getItem('user_id');
+
+            // If the winner is the user, award credits
+            if (winner === 'user') {
+                // Create a POST request to add credits
+                fetch('/minigame_reward', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        reward: 5  // Example reward of 5 credits
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Show a message to the player with the updated credits
+                    alert(`You won the game! You earned 5 credits! Your total credits: ${data.credits}`);
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
 
         // Reset the game
         function resetGame() {

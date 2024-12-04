@@ -14,7 +14,6 @@
         Your browser does not support the audio tag.
     </audio>
     
-    <!-- Movable Image for Character -->
     {% set character_image = {
         'jedi': 'Jedi_imagechar.png',
         'sith': 'Sith_imagechar.png',
@@ -73,7 +72,7 @@
     <div id="upgradeStatsOverlay" class="overlay" style="display: none;">
         <div class="overlay-content">
             <h3>Upgrade Stats</h3>
-            <p>Credits: <span id="credits">{{ character.user.credits }}</span></p>
+            <p>Credits: <span id="credits">{{ user.credits }}</span></p>
             <button onclick="upgradeStat('health', 10)">Upgrade Health (10 credits)</button>
             <button onclick="upgradeStat('attack', 15)">Upgrade Attack (15 credits)</button>
             <button onclick="upgradeStat('defense', 15)">Upgrade Defense (15 credits)</button>
@@ -102,7 +101,6 @@
             document.getElementById('upgradeStatsOverlay').style.display = 'none';
         }
 
-        // Upgrade Stat Function
         function upgradeStat(stat, cost) {
             fetch('/upgrade_stats', {
                 method: 'POST',
@@ -117,11 +115,12 @@
                     alert(data.error);
                 } else {
                     alert(data.message);
-                    document.getElementById('credits').textContent = data.credits;
+                    document.getElementById('credits').textContent = data.credits;  // Update credits on UI
                 }
             })
             .catch(error => console.error('Error:', error));
         }
+
     </script>
 </body>
 </html>

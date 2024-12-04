@@ -6,22 +6,30 @@
     <title>Tatooine - Star Wars RPG</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        /* Ensure the canvas covers the entire screen */
+        /* Ensure the page is centered and fixed size */
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             overflow: hidden;
             background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Container for the fixed-size game screen */
+        #gameContainer {
+            width: 1200px;  /* Fixed width */
+            height: 700px;  /* Fixed height */
+            position: relative;
         }
 
         /* Canvas for game background and objects */
         #gameCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
+            display: block;
         }
 
         /* The container for the welcome text */
@@ -85,34 +93,37 @@
 </head>
 <body>
 
-    <!-- Canvas for the game -->
-    <canvas id="gameCanvas"></canvas>
+    <!-- Fixed size container for the game -->
+    <div id="gameContainer">
+        <!-- Canvas for the game -->
+        <canvas id="gameCanvas"></canvas>
 
-    <!-- Welcome text overlay -->
-    <div class="welcome-text" id="welcomeText">
-        Welcome to Tatooine
+        <!-- Welcome text overlay -->
+        <div class="welcome-text" id="welcomeText">
+            Welcome to Tatooine
+        </div>
+
+        <!-- Button to go back to the game -->
+        <button id="returnButton" onclick="window.location.href='{{ url_for('game') }}'">Return to Game</button>
+
+        <!-- Button to launch Tic Tac Toe -->
+        <button id="ticTacToeButton" onclick="window.location.href='{{ url_for('tic_tac_toe') }}'">Play Tic Tac Toe</button>
+
+        <!-- Button to launch crossword -->
+        <button id="crossword" onclick="window.location.href='{{ url_for('crossword') }}'">Play Trivia</button>
+
+        <!-- Button to launch RPS game -->
+        <button id="rpsButton" onclick="window.location.href='{{ url_for('battle') }}'">Fight Boss</button>
     </div>
-
-    <!-- Button to go back to the game -->
-    <button id="returnButton" onclick="window.location.href='{{ url_for('game') }}'">Return to Game</button>
-
-    <!-- Button to launch Tic Tac Toe -->
-    <button id="ticTacToeButton" onclick="window.location.href='{{ url_for('tic_tac_toe') }}'">Play Tic Tac Toe</button>
-    
-    <!-- Button to launch crossword -->
-    <button id="crossword" onclick="window.location.href='{{ url_for('crossword') }}'">Play Trivia</button>
-    
-    <!-- Button to launch RPS game -->
-    <button id="rpsButton" onclick="window.location.href='{{ url_for('battle') }}'">Fight Boss</button>
 
     <script>
         // Set up the canvas
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Set canvas to cover the full window
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        // Set canvas size to match the fixed container size
+        canvas.width = 1200;
+        canvas.height = 800;
 
         // Load the background image
         const bgImage = new Image();
@@ -158,22 +169,6 @@
             draw();
         });
 
-        // Function to render background and character
-        function draw() {
-            // Clear the canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Draw the background image
-            ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-
-            // Draw the character at its new position (50x50 px)
-            ctx.drawImage(character, posX, posY, 50, 50);
-        }
-
-        // Adjust canvas size dynamically to cover the entire window
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        
         // Once the background image is loaded, draw everything
         bgImage.onload = draw;
 
