@@ -74,6 +74,47 @@
             font-size: 1.5em;
             margin-top: 10px;
         }
+
+        .loss-counter {
+            font-size: 1.5em;
+            margin-top: 10px;
+            color: red;
+        }
+
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .modal button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 1.2em;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .modal button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -83,8 +124,18 @@
         <div class="options" id="options"></div>
         <div class="feedback" id="feedback"></div>
         <div class="counter" id="counter">Correct Answers: 0 / 5</div>
+        <div class="loss-counter" id="lossCounter">Losses Left: 2</div>
     </div>
     <button onclick="window.location.href='{{ url_for('tatooine') }}'">Return to Tatooine</button>
+
+    <!-- Modal for win or lose -->
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <h2 id="modalMessage"></h2>
+            <button onclick="playAgain()">Play Again</button>
+            <button onclick="returnToTatooine()">Return to Tatooine</button>
+        </div>
+    </div>
 
     <script>
         const triviaQuestions = [
@@ -142,58 +193,13 @@
                 question: "What is the primary weapon of a Jedi?",
                 options: ["Blaster", "Lightsaber", "Vibroblade", "Bowcaster"],
                 answer: "Lightsaber"
-            },
-            {
-                question: "Who is known as the smuggler who shot first?",
-                options: ["Han Solo", "Lando Calrissian", "Greedo", "Boba Fett"],
-                answer: "Han Solo"
-            },
-            {
-                question: "What is the name of Luke Skywalker's sister?",
-                options: ["Ray", "Padmé Amidala", "Leia Organa", "Ahsoka Tano"],
-                answer: "Leia Organa"
-            },
-            {
-                question: "What is the name of Kylo Ren's super",
-                options: ["Laser Cannon", "Planet Killer", "Death Ray", "Superlaser"],
-                answer: "Superlaser"
-            },
-            {
-                question: "Which character says, 'May the Force be with you'?",
-                options: ["Obi-Wan Kenobi", "Yoda", "Han Solo", "Princess Leia"],
-                answer: "Obi-Wan Kenobi"
-            },
-            {
-                question: "What species is the character Jar Jar Binks?",
-                options: ["Muun", "Rodian", "Wookiee", "Gungan"],
-                answer: "Gungan"
-            },
-            {
-                question: "Which of these characters carry a two ended lightsaber",
-                options: ["Darth Maul", "Count Dooku", "Palpatine", "Anakin Skywalker"],
-                answer: "Darth Maul"
-            },
-            {
-                question: "Who was Darth Vader before he turned to the dark side?",
-                options: ["Luke Skywalker", "Obi-Wan Kenobi", "Anakin Skywalker", "Jango Fett"],
-                answer: "Anakin Skywalker"
-            },
-            {
-                question: "What planet was destroyed by the first Death Star?",
-                options: ["Tatooine", "Coruscant", "Alderaan", "Endor"],
-                answer: "Alderaan"
-            },
-            {
-                question: "What is the name of the bounty hunter who captures Han Solo?",
-                options: ["Jango Fett", "Boba Fett", "Greedo", "Cad Bane"],
-                answer: "Boba Fett"
-            },
-            {
-                question: "Which planet is known as the home of the Jedi?",
-                options: ["Tatooine", "Coruscant", "Jakku", "Ahch-To"],
-                answer: "Coruscant"
             }
         ];
+
+        let shuffledQuestions = shuffleArray([...triviaQuestions]);
+        let currentQuestionIndex = 0;
+        let correctAnswersCount = 0;
+        let lossCount = 0;  // Track number of incorrect attempts
 
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -202,10 +208,6 @@
             }
             return array;
         }
-
-        let shuffledQuestions = shuffleArray([...triviaQuestions]);
-        let currentQuestionIndex = 0;
-        let correctAnswersCount = 0;
 
         function displayQuestion(questionData) {
             const questionElement = document.getElementById('question');
@@ -231,6 +233,11 @@
             counterElement.innerText = `Correct Answers: ${correctAnswersCount} / 5`;
         }
 
+        function updateLossCounter() {
+            const lossCounterElement = document.getElementById('lossCounter');
+            lossCounterElement.innerText = `Losses Left: ${2 - lossCount}`;
+        }
+
         function checkAnswer(selectedOption, correctAnswer) {
             const feedbackElement = document.getElementById('feedback');
             if (selectedOption === correctAnswer) {
@@ -240,32 +247,48 @@
 
                 if (correctAnswersCount >= 5) {
                     setTimeout(() => {
-                        alert("Congratulations! You've beat the trivia!");
-                        window.location.href = "{{ url_for('tatooine') }}";
+                        showResultModal("Congratulations! You've completed the quiz!");
                     }, 500);
                     return;
                 }
             } else {
                 feedbackElement.innerHTML = 'Incorrect! The correct answer was: ' + correctAnswer;
+                lossCount++;
+                updateLossCounter();
+
+                if (lossCount >= 2) {
+                    setTimeout(() => {
+                        showResultModal("You've lost too many times. Returning to Tatooine...");
+                    }, 500);
+                }
             }
 
-            setTimeout(nextQuestion, 1000);
-        }
-
-        function nextQuestion() {
+            // Move to next question
             currentQuestionIndex++;
             if (currentQuestionIndex < shuffledQuestions.length) {
-                displayQuestion(shuffledQuestions[currentQuestionIndex]);
-            } else if (correctAnswersCount < 5) {
-                alert('You have completed the trivia quiz, but didn’t answer enough questions correctly to win.');
-                window.location.href = "{{ url_for('tatooine') }}";
+                setTimeout(() => {
+                    displayQuestion(shuffledQuestions[currentQuestionIndex]);
+                }, 1000);
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            displayQuestion(shuffledQuestions[currentQuestionIndex]);
-            updateCounter();
-        });
+        function showResultModal(message) {
+            const modal = document.getElementById('resultModal');
+            const modalMessage = document.getElementById('modalMessage');
+            modalMessage.innerText = message;
+            modal.style.display = 'flex';
+        }
+
+        function playAgain() {
+            window.location.href = window.location.href;
+        }
+
+        function returnToTatooine() {
+            window.location.href = '{{ url_for('tatooine') }}';
+        }
+
+        displayQuestion(shuffledQuestions[currentQuestionIndex]);
+
     </script>
 </body>
 </html>

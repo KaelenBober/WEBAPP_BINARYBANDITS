@@ -1,3 +1,5 @@
+let credits = 0;
+
 // Function to shuffle the trivia questions array
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -132,3 +134,4 @@ function rewardPlayer(rewardAmount) {
     })
     .catch(error => console.error('Error:', error));
 }
+
