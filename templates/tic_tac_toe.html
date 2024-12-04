@@ -44,6 +44,14 @@
             cursor: not-allowed;
         }
 
+        .cell.winner {
+            background-color: #2ecc71; /* Green color for player's winning cells */
+        }
+
+        .cell.ai-winner {
+            background-color: #e74c3c; /* Red color for AI's winning cells */
+        }
+
         #gameStatus {
             margin-top: 20px;
             font-size: 1.2em;
@@ -63,20 +71,41 @@
         button:hover {
             background-color: #16a085;
         }
+
+        #endGameMessage {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        #endGameMessage button {
+            margin: 10px 5px;
+        }
     </style>
 </head>
 <body>
     <h1>Tic Tac Toe - Play Against AI</h1>
     <div id="gameBoard"></div>
     <div id="gameStatus">Player X's turn</div>
-    <button onclick="resetGame()">Restart Game</button>
+
+    <!-- End game message -->
+    <div id="endGameMessage">
+        <p id="messageText"></p>
+        <button id="restartButton" onclick="resetGame()">Restart Game</button>
+        <button id="backToTatooine" onclick="goToTatooine()">Back to Tatooine</button>
+    </div>
 
     <script>
         const gameBoard = document.getElementById('gameBoard');
         const gameStatus = document.getElementById('gameStatus');
+        const endGameMessage = document.getElementById('endGameMessage');
+        const messageText = document.getElementById('messageText');
         let board = Array(9).fill(null);
         let currentPlayer = 'X';
         let isGameOver = false;
+        let winningCells = []; // Store the indices of the winning cells
+        let aiWinningCells = []; // Store the AI's winning cells
 
         // Create the game board
         function createBoard() {
@@ -86,6 +115,12 @@
                 cellElement.classList.add('cell');
                 if (cell) cellElement.classList.add('taken');
                 cellElement.textContent = cell || '';
+                // Highlight winning cells for player X (green) or AI (red)
+                if (winningCells.includes(index)) {
+                    cellElement.classList.add('winner');
+                } else if (aiWinningCells.includes(index)) {
+                    cellElement.classList.add('ai-winner');
+                }
                 cellElement.addEventListener('click', () => handleCellClick(index));
                 gameBoard.appendChild(cellElement);
             });
@@ -96,12 +131,10 @@
             if (isGameOver || board[index]) return;
             if (currentPlayer === 'X') {
                 board[index] = currentPlayer;
-                if (checkWinner()) {
-                    gameStatus.textContent = `Player ${currentPlayer} wins!`;
-                    isGameOver = true;
+                if (checkWinner('X')) {
+                    endGame('Player X wins! You have beaten the AI.', true);
                 } else if (board.every(cell => cell)) {
-                    gameStatus.textContent = 'It\'s a draw!';
-                    isGameOver = true;
+                    endGame('It\'s a draw! Try again.', false);
                 } else {
                     currentPlayer = 'O';
                     gameStatus.textContent = 'AI is thinking...';
@@ -115,14 +148,9 @@
         function aiMove() {
             if (isGameOver) return;
 
-            // Check if AI can win
             let move = findBestMove('O');
+            if (move === null) move = findBestMove('X');
             if (move === null) {
-                // Block player's win
-                move = findBestMove('X');
-            }
-            if (move === null) {
-                // Pick a random available spot
                 const availableMoves = board
                     .map((cell, index) => (cell === null ? index : null))
                     .filter(index => index !== null);
@@ -130,12 +158,10 @@
             }
 
             board[move] = 'O';
-            if (checkWinner()) {
-                gameStatus.textContent = 'AI (O) wins!';
-                isGameOver = true;
+            if (checkWinner('O')) {
+                endGame('AI (O) wins! You lost.', false);
             } else if (board.every(cell => cell)) {
-                gameStatus.textContent = 'It\'s a draw!';
-                isGameOver = true;
+                endGame('It\'s a draw! Try again.', false);
             } else {
                 currentPlayer = 'X';
                 gameStatus.textContent = 'Player X\'s turn';
@@ -143,7 +169,25 @@
             createBoard();
         }
 
-        // Find the best move for a given player
+        // End game logic
+        function endGame(message, playerWon) {
+            isGameOver = true;
+            gameStatus.style.display = 'none';
+            endGameMessage.style.display = 'flex';
+            messageText.textContent = message;
+            if (playerWon) {
+                document.getElementById('restartButton').style.display = 'none';
+            } else {
+                document.getElementById('restartButton').style.display = 'inline-block';
+            }
+        }
+
+        // Navigation to Tatooine
+        function goToTatooine() {
+            window.location.href = "{{ url_for('tatooine') }}";
+        }
+
+        // Find the best move
         function findBestMove(player) {
             const winningCombinations = [
                 [0, 1, 2],
@@ -157,27 +201,15 @@
             ];
             for (const combination of winningCombinations) {
                 const [a, b, c] = combination;
-                if (
-                    board[a] === player &&
-                    board[b] === player &&
-                    board[c] === null
-                ) return c;
-                if (
-                    board[a] === player &&
-                    board[c] === player &&
-                    board[b] === null
-                ) return b;
-                if (
-                    board[b] === player &&
-                    board[c] === player &&
-                    board[a] === null
-                ) return a;
+                if (board[a] === player && board[b] === player && board[c] === null) return c;
+                if (board[a] === player && board[c] === player && board[b] === null) return b;
+                if (board[b] === player && board[c] === player && board[a] === null) return a;
             }
             return null;
         }
 
-        // Check for a winner
-        function checkWinner() {
+        // Check for a winner and return the winning cells
+        function checkWinner(player) {
             const winningCombinations = [
                 [0, 1, 2],
                 [3, 4, 5],
@@ -188,9 +220,20 @@
                 [0, 4, 8],
                 [2, 4, 6]
             ];
-            return winningCombinations.some(combination =>
-                combination.every(index => board[index] === currentPlayer)
-            );
+            const winningCellsForPlayer = [];
+            for (const combination of winningCombinations) {
+                const [a, b, c] = combination;
+                if (board[a] === player && board[b] === player && board[c] === player) {
+                    winningCellsForPlayer.push(a, b, c);
+                    if (player === 'X') {
+                        winningCells = winningCellsForPlayer; // Store player X's winning cells
+                    } else {
+                        aiWinningCells = winningCellsForPlayer; // Store AI's winning cells
+                    }
+                    return true;
+                }
+            }
+            return false;
         }
 
         // Reset the game
@@ -198,6 +241,10 @@
             board = Array(9).fill(null);
             currentPlayer = 'X';
             isGameOver = false;
+            winningCells = []; // Clear the player's winning cells
+            aiWinningCells = []; // Clear the AI's winning cells
+            gameStatus.style.display = 'block';
+            endGameMessage.style.display = 'none';
             gameStatus.textContent = 'Player X\'s turn';
             createBoard();
         }

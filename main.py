@@ -45,10 +45,11 @@ class Character(db.Model):
     character_type = db.Column(db.String(50), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
-    user = db.relationship('User', backref=db.backref('characters', lazy=True))
+    health = db.Column(db.Integer, default=100)  # Default health
+    attack = db.Column(db.Integer, default=10)  # Default attack power
+    defense = db.Column(db.Integer, default=5)  # Default defense
 
-    def __repr__(self):
-        return f'<Character {self.name}, {self.character_type}>'
+    user = db.relationship('User', backref=db.backref('characters', lazy=True))
 
 # Create the database and tables if they don't exist
 with app.app_context():
@@ -181,6 +182,74 @@ def select_character(character_id):
 
     flash("Invalid character selection.", "error")
     return redirect(url_for('character_creation'))  # Redirect back to character creation if something goes wrong
+    
+@app.route('/minigame_reward', methods=['POST'])
+def minigame_reward():
+    user_id = session.get('user_id')
+
+    if not user_id:
+        return {"error": "User not logged in"}, 401
+
+    user = User.query.get(user_id)
+
+    if not user:
+        return {"error": "User not found"}, 404
+
+    # Retrieve the reward amount from the request
+    reward_amount = request.json.get('reward', 0)
+
+    # Update user's credits
+    user.credits += reward_amount
+    db.session.commit()
+
+    return {"message": f"You've earned {reward_amount} credits!", "credits": user.credits}
+
+@app.route('/upgrade_stats', methods=['POST'])
+def upgrade_stats():
+    user_id = session.get('user_id')
+    selected_character_id = session.get('selected_character_id')
+
+    if not user_id or not selected_character_id:
+        return {"error": "User not logged in or character not selected"}, 401
+
+    user = User.query.get(user_id)
+    character = Character.query.get(selected_character_id)
+
+    if not user or not character:
+        return {"error": "User or character not found"}, 404
+
+    # Get the upgrade request from the client
+    stat_to_upgrade = request.json.get('stat')  # 'health', 'attack', or 'defense'
+    upgrade_cost = request.json.get('cost', 10)  # Default cost is 10 credits
+
+    # Check if the user has enough credits
+    if user.credits < upgrade_cost:
+        return {"error": "Not enough credits to upgrade"}, 400
+
+    # Deduct credits and upgrade the stat
+    user.credits -= upgrade_cost
+    if stat_to_upgrade == 'health':
+        character.health += 10  # Example increment
+    elif stat_to_upgrade == 'attack':
+        character.attack += 2  # Example increment
+    elif stat_to_upgrade == 'defense':
+        character.defense += 2  # Example increment
+    else:
+        return {"error": "Invalid stat"}, 400
+
+    # Save the changes to the database
+    db.session.commit()
+
+    return {
+        "message": f"{stat_to_upgrade.capitalize()} upgraded!",
+        "credits": user.credits,
+        "character": {
+            "health": character.health,
+            "attack": character.attack,
+            "defense": character.defense
+        }
+    }
+
 
 @app.route('/game')
 def game():

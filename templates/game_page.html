@@ -29,39 +29,99 @@
     <button 
         class="character-creation-button"
         onclick="window.location.href='{{ url_for('character_creation') }}'"
-        style="position: fixed; bottom: 10px; right: 10px;">
+        style="position: fixed; bottom: 10px; left: 10px;">
         Back to Character Creation
     </button>
 
-    <!-- Overlay trigger -->
-    <button id="overlayTrigger" class="overlay-trigger">
-        Show Overlay
+    <!-- Overlay Trigger Button -->
+    <button id="overlayTrigger" class="overlay-trigger" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%);">
+    Show Overlay
     </button>
 
-    <<div id="overlay" class="overlay">
-            <div class="overlay-content">
-                <!-- Container for planet buttons -->
-                <div class="planet-buttons">
-                    <!-- Button with image for Tatooine -->
-                    <div class="planet-button-container">
-                        <img src="{{ url_for('static', filename='tatooine_planet.jpg') }}" alt="Tatooine" class="planet-image">
-                        <button class="planet-button" onclick="goToPlanet('Tatooine')">Tatooine</button>
-                    </div>
+    <!-- New Upgrade Stats Button -->
+    <button id="upgradeStatsTrigger" class="overlay-trigger" style="position: fixed; bottom: 10px; right: 10px;">
+        Upgrade Stats
+    </button>
 
-                    <!-- Button with image for Hoth -->
-                    <div class="planet-button-container">
-                        <img src="{{ url_for('static', filename='hoth_planet.jpg') }}" alt="Hoth" class="planet-image">
-                        <button class="planet-button" onclick="goToPlanet('Hoth')">Hoth</button>
-                    </div>
-
-                    <!-- Button with image for Mustafar -->
-                    <div class="planet-button-container">
-                        <img src="{{ url_for('static', filename='mustafar_planet.jpg') }}" alt="Mustafar" class="planet-image">
-                        <button class="planet-button" onclick="goToPlanet('Mustafar')">Mustafar</button>
-                    </div>
+    <!-- Planet Selection Overlay -->
+    <div id="overlay" class="overlay" style="display: none;">
+        <div class="overlay-content">
+            <div class="planet-buttons">
+                <!-- Button with image for Tatooine -->
+                <div class="planet-button-container">
+                    <img src="{{ url_for('static', filename='tatooine_planet.jpg') }}" alt="Tatooine" class="planet-image">
+                    <button class="planet-button" onclick="goToPlanet('Tatooine')">Tatooine</button>
                 </div>
-                <button id="returnButton" class="return-button" onclick="hideOverlay()">Return</button>
+
+                <!-- Button with image for Hoth -->
+                <div class="planet-button-container">
+                    <img src="{{ url_for('static', filename='hoth_planet.jpg') }}" alt="Hoth" class="planet-image">
+                    <button class="planet-button" onclick="goToPlanet('Hoth')">Hoth</button>
+                </div>
+
+                <!-- Button with image for Mustafar -->
+                <div class="planet-button-container">
+                    <img src="{{ url_for('static', filename='mustafar_planet.jpg') }}" alt="Mustafar" class="planet-image">
+                    <button class="planet-button" onclick="goToPlanet('Mustafar')">Mustafar</button>
+                </div>
             </div>
+            <button id="returnButton" class="return-button" onclick="hideOverlay()">Return</button>
         </div>
-</body>    
+    </div>
+
+    <!-- Upgrade Stats Overlay -->
+    <div id="upgradeStatsOverlay" class="overlay" style="display: none;">
+        <div class="overlay-content">
+            <h3>Upgrade Stats</h3>
+            <p>Credits: <span id="credits">{{ character.user.credits }}</span></p>
+            <button onclick="upgradeStat('health', 10)">Upgrade Health (10 credits)</button>
+            <button onclick="upgradeStat('attack', 15)">Upgrade Attack (15 credits)</button>
+            <button onclick="upgradeStat('defense', 15)">Upgrade Defense (15 credits)</button>
+            <button id="returnUpgradeButton" class="return-button" onclick="hideUpgradeStatsOverlay()">Return</button>
+        </div>
+    </div>
+
+    <script>
+        // Show Planet Selection Overlay
+        document.getElementById('overlayTrigger').addEventListener('click', () => {
+            document.getElementById('overlay').style.display = 'block';
+        });
+
+        // Hide Planet Selection Overlay
+        function hideOverlay() {
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // Show Upgrade Stats Overlay
+        document.getElementById('upgradeStatsTrigger').addEventListener('click', () => {
+            document.getElementById('upgradeStatsOverlay').style.display = 'block';
+        });
+
+        // Hide Upgrade Stats Overlay
+        function hideUpgradeStatsOverlay() {
+            document.getElementById('upgradeStatsOverlay').style.display = 'none';
+        }
+
+        // Upgrade Stat Function
+        function upgradeStat(stat, cost) {
+            fetch('/upgrade_stats', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ stat: stat, cost: cost })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    alert(data.message);
+                    document.getElementById('credits').textContent = data.credits;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
 </html>

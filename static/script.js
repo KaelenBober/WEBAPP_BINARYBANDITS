@@ -112,3 +112,23 @@ document.addEventListener('DOMContentLoaded', () => {
     shuffleArray(triviaQuestions);
     displayQuestion(triviaQuestions[currentQuestionIndex]);
 });
+
+function rewardPlayer(rewardAmount) {
+    fetch('/minigame_reward', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ reward: rewardAmount })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            alert(data.message);
+            console.log(`New credits: ${data.credits}`);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
