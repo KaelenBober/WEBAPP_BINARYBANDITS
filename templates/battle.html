@@ -92,6 +92,12 @@
             color: #fff;
             margin: 20px;
         }
+
+        .stats {
+            font-size: 1.2rem;
+            margin-top: 20px;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -129,6 +135,11 @@
         <button class="action-button" onclick="useItem()">Use Item</button>
     </div>
 
+    <div class="stats">
+        <p>Player Health: <span id="playerHealthText">{{ character.health }}</span></p>
+        <p>Enemy Health: <span id="enemyHealthText">100</span></p>
+    </div>
+
     <script>
         // Character stats from backend
         const playerMaxHealth = {{ character.health }};
@@ -148,9 +159,14 @@
         function updateHealthBars() {
             const playerHealthBar = document.getElementById('playerHealthBar');
             const enemyHealthBar = document.getElementById('enemyHealthBar');
+            const playerHealthText = document.getElementById('playerHealthText');
+            const enemyHealthText = document.getElementById('enemyHealthText');
 
             playerHealthBar.style.width = (playerHealth / playerMaxHealth * 100) + '%';
             enemyHealthBar.style.width = (enemyHealth / enemyMaxHealth * 100) + '%';
+
+            playerHealthText.textContent = playerHealth;
+            enemyHealthText.textContent = enemyHealth;
         }
 
         // Attack function (player's turn)

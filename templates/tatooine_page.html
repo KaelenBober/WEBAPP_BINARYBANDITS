@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tatooine - Star Wars RPG</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" autoplay loop>
+        <source src="{{ url_for('static', filename='tatooine_audio.mp3') }}" type="audio/mpeg">
+        Your browser does not support the audio tag.
+    </audio>
     <style>
         /* Ensure the page is centered and fixed size */
         body, html {
@@ -54,7 +60,6 @@
             }
         }
 
-
         /* Star Wars-style buttons */
         button {
             background-color: black;
@@ -78,17 +83,22 @@
 
         /* Specific button positions */
         #ticTacToeButton {
-            top: 30%;
+            top: 20%;
             left: 10%;
         }
 
         #crossword {
-            top: 50%;
+            top: 40%;
             left: 10%;
         }
 
+        #pongButton {
+            top: 60%;
+            left: 10%;
+        }
+        
         #rpsButton {
-            top: 70%;
+            top: 80%;
             left: 10%;
         }
 
@@ -122,6 +132,10 @@
 
         <!-- Button to launch RPS game -->
         <button id="rpsButton" onclick="window.location.href='{{ url_for('battle') }}'">Fight Boss</button>
+        
+        <!-- Button to launch pong game -->
+        <button id="pongButton" onclick="window.location.href='{{ url_for('pong') }}'">Play Pong</button>
+
     </div>
 
     <script>
@@ -137,9 +151,29 @@
         const bgImage = new Image();
         bgImage.src = '{{ url_for("static", filename="tatooine_background.jpg") }}';
 
-        // Load character image
+        // Load character image dynamically based on character_type
         const character = new Image();
-        character.src = '{{ url_for("static", filename="character_sprite.jpg") }}';
+        const characterType = "{{ character_type }}";  // Flask passes this variable
+
+        // Map character types to their respective image files
+        let characterImagePath = 'character_sprite.jpg';  // Default fallback image
+
+        if (characterType === 'jedi') {
+            characterImagePath = 'Jedi_imagechar.png';
+        } else if (characterType === 'sith') {
+            characterImagePath = 'Sith_imagechar.png';
+        } else if (characterType === 'bounty_hunter') {
+            characterImagePath = 'bounty_hunter_image.jpg';
+        } else if (characterType === 'droid') {
+            characterImagePath = 'Droid_imagechar.png';
+        } else if (characterType === 'mandalorian') {
+            characterImagePath = 'Mandalorian_imagechar.png';
+        } else if (characterType === 'smuggler') {
+            characterImagePath = 'smuggler_image.jpg';
+        }
+
+        // Set the character image source dynamically
+        character.src = `{{ url_for("static", filename="") }}${characterImagePath}`;
 
         // Character initial position
         let posX = canvas.width / 2;
@@ -155,7 +189,7 @@
             ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
 
             // Draw the character (scaled to 50x50 px)
-            ctx.drawImage(character, posX, posY, 50, 50);
+            ctx.drawImage(character, posX, posY, 100, 100);
         }
 
         // Handle keyboard input to move the character

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong Game - Star Wars Edition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* General Styling */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: url('{{ url_for("static", filename="space_background.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            font-family: 'Starjedi', sans-serif;
+        }
+
+        #pongCanvas {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 3px solid #FFD700;
+            box-shadow: 0 0 30px #FFD700;
+        }
+
+        /* Star Wars-style Buttons */
+        .star-wars-button {
+            background-color: black;
+            color: #FFD700;
+            font-family: 'Starjedi', sans-serif;
+            font-size: 1em; /* Smaller font size */
+            border: 2px solid #FFD700;
+            padding: 8px 15px; /* Smaller padding */
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #FFD700;
+            transition: all 0.3s ease-in-out;
+            margin-top: 10px; /* Adjust spacing from canvas */
+        }
+
+        .star-wars-button:hover {
+            background-color: #FFD700;
+            color: black;
+            box-shadow: 0 0 20px #FFD700, 0 0 40px #FFD700;
+        }
+
+        #returnButton {
+            position: static; /* Default static position */
+        }
+    </style>
+</head>
+<body>
+    <canvas id="pongCanvas"></canvas>
+
+    <!-- Return to Tatooine Button -->
+    <button id="returnButton" class="star-wars-button" onclick="window.location.href='{{ url_for('tatooine') }}'">
+        Return to Tatooine
+    </button>
+
+    <script>
+        // Pong game logic
+        const pongCanvas = document.getElementById('pongCanvas');
+        const pongCtx = pongCanvas.getContext('2d');
+        pongCanvas.width = 800;
+        pongCanvas.height = 600;
+
+        const paddleWidth = 10, paddleHeight = 100, ballSize = 10;
+        let paddle1Y = pongCanvas.height / 2 - paddleHeight / 2;
+        let paddle2Y = pongCanvas.height / 2 - paddleHeight / 2;
+        let ballX = pongCanvas.width / 2, ballY = pongCanvas.height / 2;
+        let ballSpeedX = 5, ballSpeedY = 5;
+        let score1 = 0, score2 = 0;
+
+        const paddleSpeed = 5; // Smooth movement speed
+        let paddle1Up = false, paddle1Down = false; // Track Player 1 keypresses
+
+        let speedMultiplier = 1.0; // Multiplier for ball speed
+        const speedIncrement = 0.001; // Incremental speed increase
+
+        function resetBall() {
+            ballX = pongCanvas.width / 2;
+            ballY = pongCanvas.height / 2;
+            ballSpeedX = -ballSpeedX * 0.8; // Reset speed to avoid endless acceleration
+            ballSpeedY = ballSpeedY > 0 ? 5 : -5; // Reset speed direction
+        }
+
+        function pongGameLoop() {
+            pongCtx.clearRect(0, 0, pongCanvas.width, pongCanvas.height);
+
+            // Increase speed multiplier gradually
+            speedMultiplier += speedIncrement;
+
+            // Move Paddle 1 based on input
+            if (paddle1Up && paddle1Y > 0) paddle1Y -= paddleSpeed;
+            if (paddle1Down && paddle1Y < pongCanvas.height - paddleHeight) paddle1Y += paddleSpeed;
+
+            // AI for Paddle 2 (right paddle)
+            if (ballY < paddle2Y + paddleHeight / 2) paddle2Y -= paddleSpeed;
+            if (ballY > paddle2Y + paddleHeight / 2) paddle2Y += paddleSpeed;
+
+            // Draw paddles
+            pongCtx.fillStyle = '#FFD700'; // Golden yellow
+            pongCtx.fillRect(0, paddle1Y, paddleWidth, paddleHeight);
+            pongCtx.fillRect(pongCanvas.width - paddleWidth, paddle2Y, paddleWidth, paddleHeight);
+
+            // Ball movement
+            ballX += ballSpeedX * speedMultiplier;
+            ballY += ballSpeedY * speedMultiplier;
+
+            if (ballY <= 0 || ballY + ballSize >= pongCanvas.height) ballSpeedY = -ballSpeedY;
+
+            if (
+                (ballX <= paddleWidth && ballY >= paddle1Y && ballY <= paddle1Y + paddleHeight) ||
+                (ballX + ballSize >= pongCanvas.width - paddleWidth && ballY >= paddle2Y && ballY <= paddle2Y + paddleHeight)
+            ) {
+                ballSpeedX = -ballSpeedX;
+            }
+
+            if (ballX <= 0) {
+                score2++;
+                resetBall();
+            }
+            if (ballX + ballSize >= pongCanvas.width) {
+                score1++;
+                resetBall();
+            }
+
+            // Draw ball
+            pongCtx.fillStyle = '#FFD700';
+            pongCtx.fillRect(ballX, ballY, ballSize, ballSize);
+
+            // Draw scores
+            pongCtx.font = '30px Starjedi';
+            pongCtx.fillText(`Player 1: ${score1}`, 20, 40);
+            pongCtx.fillText(`Player 2: ${score2}`, pongCanvas.width - 200, 40);
+
+            requestAnimationFrame(pongGameLoop);
+        }
+
+        // Keypress listeners for smoother paddle movement
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'w') paddle1Up = true;
+            if (event.key === 's') paddle1Down = true;
+        });
+
+        document.addEventListener('keyup', (event) => {
+            if (event.key === 'w') paddle1Up = false;
+            if (event.key === 's') paddle1Down = false;
+        });
+
+        pongGameLoop();
+
+
+    </script>
+</body>
+</html>
+
+

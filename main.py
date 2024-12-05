@@ -325,7 +325,13 @@ def load_game():
 
 @app.route('/tatooine')
 def tatooine():
-    return render_template('tatooine_page.html')
+    character_type = session.get('character_type', 'jedi')  # Default to 'jedi' if not set
+    return render_template('tatooine_page.html', character_type=character_type)
+
+@app.route('/pong')
+def pong():
+    return render_template('pong.html')
+
 
 @app.route('/tic_tac_toe')
 def tic_tac_toe():
@@ -366,9 +372,14 @@ def battle():
     selected_character_id = session.get('selected_character_id')
     character = Character.query.get(selected_character_id)
 
-    # Pass character stats to the template
-    return render_template('battle.html', player_image=player_image, player_name=player_name, 
-                           character=character)
+    if not character:
+        flash("Character not found.", "error")
+        return redirect(url_for('character_creation'))
+
+    # Pass character stats (health, attack, defense) to the template
+    return render_template('battle.html', player_image=player_image, player_name=player_name,
+                           character=character, health=character.health, attack=character.attack, defense=character.defense)
+
 
 
 
@@ -384,58 +395,3 @@ def mustafar():
 if __name__ == '__main__':
     app.run(debug=True)
 
-
-# @app.route('/upgrade_stats', methods=['POST'])
-# def upgrade_stats():
-#     user_id = session.get('user_id')
-#     selected_character_id = session.get('selected_character_id')
-
-#     if not user_id:
-#         return {"error": "User not logged in"}, 401
-
-#     if not selected_character_id:
-#         return {"error": "No character selected"}, 400
-
-#     # Fetch the user and character
-#     user = User.query.get(user_id)
-#     character = Character.query.get(selected_character_id)
-
-#     if not user or not character or character.user_id != user_id:
-#         return {"error": "Character not found or not owned by user"}, 404
-
-#     # Get the stat and cost from the request
-#     stat = request.json.get('stat')
-#     cost = request.json.get('cost')
-
-#     # Validate input
-#     if not stat or not cost:
-#         return {"error": "Invalid input"}, 400
-
-#     # Check if the user has enough credits
-#     if user.credits < cost:
-#         return {"error": "Not enough credits"}, 400
-
-#     # Deduct credits and upgrade the stat
-#     user.credits -= cost
-#     if stat == 'health':
-#         character.health += 10
-#     elif stat == 'attack':
-#         character.attack += 5
-#     elif stat == 'defense':
-#         character.defense += 5
-#     else:
-#         return {"error": "Invalid stat"}, 400
-
-#     # Commit changes to the database
-#     db.session.commit()
-
-#     return {
-#         "message": f"Successfully upgraded {stat}!",
-#         "credits": user.credits,
-#         "character_stats": {
-#             "health": character.health,
-#             "attack": character.attack,
-#             "defense": character.defense,
-#         }
-#     }
-#  https://chatgpt.com/share/674fb567-b0e0-8012-a916-1ad96ffd79e6

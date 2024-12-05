@@ -299,7 +299,7 @@ form input {
 .return-button:hover {
     font-family: 'StarJedi', sans-serif; /* Hover font */
     background-color: darkred;
-    transform: translateX(-50%) scale(1.1);
+    transform: none;
 }
 
 #movableImage {
@@ -442,7 +442,7 @@ form input {
 .star-wars-overlay {
     background-color: rgba(0, 0, 0, 0.9); /* Dark semi-transparent background */
     border: 2px solid #ffcc00; /* Star Wars yellow border */
-    border-radius: 15px;
+    border-radius: 10px;
     padding: 20px;
     text-align: center;
     box-shadow: 0 0 20px #ffcc00; /* Glowing effect */
@@ -504,4 +504,5 @@ form input {
 
 .return-button:hover {
     box-shadow: 0 0 15px #00ffcc, 0 0 25px #00ffff;
+    transform: none;
 }
