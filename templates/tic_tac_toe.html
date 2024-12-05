@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic Tac Toe - AI</title>
+    <title>Tic Tac Toe - Play against the best droid in the galaxy</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -89,6 +89,9 @@
     <div id="gameBoard"></div>
     <div id="gameStatus">Player X's turn</div>
 
+    <!-- Victory Sound -->
+    <audio id="victorySound" src="/static/victory.mp3"></audio>
+
     <!-- End game message -->
     <div id="endGameMessage">
         <p id="messageText"></p>
@@ -101,6 +104,7 @@
         const gameStatus = document.getElementById('gameStatus');
         const endGameMessage = document.getElementById('endGameMessage');
         const messageText = document.getElementById('messageText');
+        const victorySound = document.getElementById('victorySound');
         let board = Array(9).fill(null);
         let currentPlayer = 'X';
         let isGameOver = false;
@@ -132,9 +136,11 @@
             if (currentPlayer === 'X') {
                 board[index] = currentPlayer;
                 if (checkWinner('X')) {
-                    endGame('Player X wins! You have beaten the AI.', true);
+                    // Play victory sound when player wins
+                    victorySound.play();
+                    endGame('Player X wins! You have beaten the AI. Here is 10 credits for your efforts', true);
                 } else if (board.every(cell => cell)) {
-                    endGame('It\'s a draw! Try again.', false);
+                    endGame('It\'s a draw! You earn some credits for trying.', 'draw');
                 } else {
                     currentPlayer = 'O';
                     gameStatus.textContent = 'AI is thinking...';
@@ -161,28 +167,12 @@
             if (checkWinner('O')) {
                 endGame('AI (O) wins! You lost.', false);
             } else if (board.every(cell => cell)) {
-                endGame('It\'s a draw! Try again.', false);
+                endGame('It\'s a draw! You earn some credits for trying.', 'draw');
             } else {
                 currentPlayer = 'X';
                 gameStatus.textContent = 'Player X\'s turn';
             }
             createBoard();
-        }
-
-        // End game logic
-        function endGame(message, playerWon) {
-            isGameOver = true;
-            gameStatus.style.display = 'none';
-            endGameMessage.style.display = 'flex';
-            messageText.textContent = message;
-            if (playerWon) {
-                console.log("Player won, triggering credit award...");
-                // Call the onGameWin function if the player wins
-                onGameWin();
-                document.getElementById('restartButton').style.display = 'none';
-            } else {
-                document.getElementById('restartButton').style.display = 'inline-block';
-            }
         }
 
         // Navigation to Tatooine
@@ -238,38 +228,53 @@
             }
             return false;
         }
-        // Assuming you already have game logic to check for a winner, 
-        // call this function when a player wins
-        function onGameWin() {
-            // Get the current user ID from session storage (or use another method to access it)
-            let userId = sessionStorage.getItem('user_id');
-            console.log("User ID: ", userId);  // Log the user ID
 
-            // If the winner is the user, award credits
-            if (userId) {
-                fetch('/minigame_reward', {
+        // End game logic
+        function endGame(message, gameResult) {
+            isGameOver = true;
+            gameStatus.style.display = 'none';
+            endGameMessage.style.display = 'flex';
+            messageText.textContent = message;
+
+            let creditsAwarded = 0;
+            switch(gameResult) {
+                case true: // Player wins
+                    creditsAwarded = 10;
+                    document.getElementById('restartButton').style.display = 'none';
+                    break;
+                case 'draw': // Draw
+                    creditsAwarded = 5;
+                    document.getElementById('restartButton').style.display = 'inline-block';
+                    break;
+                default: // AI wins
+                    creditsAwarded = 0;
+                    document.getElementById('restartButton').style.display = 'inline-block';
+            }
+
+            // Only make the credit request if credits are to be awarded
+            if (creditsAwarded > 0) {
+                fetch('/award_credits', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        reward: 10  // Example reward of 10 credits
-                    })
+                    body: JSON.stringify({ credits: creditsAwarded })
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Response from server:', data);  // Log the server response
                     if (data.credits) {
-                        alert(`You won the game! You earned 10 credits! Your total credits: ${data.credits}`);
+                        // Update the credits display on the current page
+                        alert(`${message} You earned ${creditsAwarded} credits. Your total credits: ${data.credits}`);
+
+                        // Update credits in the "Upgrade Stats" overlay
+                        document.getElementById('credits').textContent = data.credits;
                     } else {
-                        console.error('No credits returned from server.');
+                        alert('Failed to award credits');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
-            } else {
-                console.log("User is not logged in.");
             }
         }
 

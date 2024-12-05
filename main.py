@@ -15,7 +15,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(120), nullable=False)  # Store hashed passwords
-    credits = db.Column(db.Integer, default=0)  # Default credits
+    credits = db.Column(db.Integer, default=50)  # Default credits
     game_state = db.Column(db.Text, default=json.dumps({}))  # Store game state as JSON
     @property
     def password(self):
@@ -183,36 +183,32 @@ def select_character(character_id):
     return redirect(url_for('character_creation'))
 
     
-@app.route('/minigame_reward', methods=['POST'])
-def minigame_reward():
-    # Ensure the user is logged in
+@app.route('/award_credits', methods=['POST'])
+def award_credits():
+    # Get the user ID (ensure they are logged in)
     user_id = session.get('user_id')
     if user_id is None:
-        print("Error: User not logged in.")  # Log error if user is not logged in
-        return {'error': 'User not logged in'}, 400
+        return jsonify({'error': 'User not logged in'}), 400
 
-    # Get the reward amount from the request
+    # Get the amount of credits to award from the request
     data = request.get_json()
-    reward = data.get('reward', 0)
+    credits_awarded = data.get('credits', 0)
 
-    if reward <= 0:
-        print("Error: Invalid reward amount.")  # Log invalid reward
-        return {'error': 'Invalid reward amount'}, 400
+    if credits_awarded <= 0:
+        return jsonify({'error': 'Invalid credits amount'}), 400
 
     # Find the user in the database
     user = User.query.get(user_id)
     if not user:
-        print(f"Error: User with ID {user_id} not found.")  # Log if user is not found
-        return {'error': 'User not found'}, 404
+        return jsonify({'error': 'User not found'}), 404
 
     # Update the user's credits
-    user.credits += reward
+    user.credits += credits_awarded
     db.session.commit()
 
-    print(f"User {user_id} credits updated to {user.credits}.")  # Log credits update
+    # Return the updated credits count
+    return jsonify({'credits': user.credits}), 200
 
-    # Return the updated credits as a response
-    return {'credits': user.credits}, 200
 
 @app.route('/upgrade_stats', methods=['POST'])
 def upgrade_stats():
@@ -366,7 +362,13 @@ def battle():
     # Get player name or fallback to a default
     player_name = session.get('player_name', 'Player')  # Default name if not set
 
-    return render_template('battle.html', player_image=player_image, player_name=player_name)
+    # Fetch the selected character from the database
+    selected_character_id = session.get('selected_character_id')
+    character = Character.query.get(selected_character_id)
+
+    # Pass character stats to the template
+    return render_template('battle.html', player_image=player_image, player_name=player_name, 
+                           character=character)
 
 
 

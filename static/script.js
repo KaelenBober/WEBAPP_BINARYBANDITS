@@ -115,23 +115,32 @@ document.addEventListener('DOMContentLoaded', () => {
     displayQuestion(triviaQuestions[currentQuestionIndex]);
 });
 
-function rewardPlayer(rewardAmount) {
-    fetch('/minigame_reward', {
+function onGameWin() {
+    // Assume you know how many credits to award (e.g., 10 credits)
+    const creditsAwarded = 10;
+
+    // Make the POST request to award credits
+    fetch('/award_credits', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ reward: rewardAmount })
+        body: JSON.stringify({ credits: creditsAwarded })
     })
     .then(response => response.json())
     .then(data => {
-        if (data.error) {
-            alert(data.error);
+        if (data.credits) {
+            // Update the credits display on the current page
+            alert(`You won the game! You earned ${creditsAwarded} credits. Your total credits: ${data.credits}`);
+
+            // Update credits in the "Upgrade Stats" overlay
+            document.getElementById('credits').textContent = data.credits;
         } else {
-            alert(data.message);
-            console.log(`New credits: ${data.credits}`);
+            alert('Failed to award credits');
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 

@@ -436,3 +436,72 @@ form input {
     color: black;
     opacity: 1;
 }
+
+
+/* General Overlay Style */
+.star-wars-overlay {
+    background-color: rgba(0, 0, 0, 0.9); /* Dark semi-transparent background */
+    border: 2px solid #ffcc00; /* Star Wars yellow border */
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 20px #ffcc00; /* Glowing effect */
+}
+
+/* Title Style */
+.star-wars-title {
+    font-family: 'Star Jedi', Arial, sans-serif; /* Use a Star Wars font */
+    font-size: 2rem;
+    color: #ffcc00; /* Star Wars yellow */
+    text-shadow: 0 0 5px #ffcc00, 0 0 10px #ff9900;
+}
+
+/* Credits Style */
+.star-wars-credits {
+    font-family: 'Orbitron', Arial, sans-serif; /* Sci-fi look */
+    font-size: 1.5rem;
+    color: #00ffcc; /* Holographic cyan */
+    text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffff;
+}
+
+/* Upgrade Buttons */
+.star-wars-button {
+    font-family: 'Star Jedi', Arial, sans-serif;
+    font-size: 1.2rem;
+    background-color: #282828; /* Dark button */
+    color: #ffcc00;
+    border: 2px solid #ffcc00;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+    text-shadow: 0 0 5px #ffcc00;
+    box-shadow: 0 0 10px #ffcc00;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.star-wars-button:hover {
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #ffcc00, 0 0 25px #ff9900;
+}
+
+/* Upgrade Buttons Container */
+.upgrade-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Return Button */
+.return-button {
+    background-color: #000;
+    color: #00ffcc;
+    border-color: #00ffcc;
+    text-shadow: 0 0 5px #00ffcc;
+}
+
+.return-button:hover {
+    box-shadow: 0 0 15px #00ffcc, 0 0 25px #00ffff;
+}

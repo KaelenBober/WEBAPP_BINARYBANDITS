@@ -95,7 +95,6 @@
     </style>
 </head>
 <body>
-
     <h1>Star Wars RPG Battle</h1>
 
     <div class="health-bar-container">
@@ -112,7 +111,7 @@
     <div class="character-container">
         <!-- Enemy Character -->
         <div class="character">
-            <div class="character-name" id="enemyName">Enemy</div>
+            <div class="character-name" id="enemyName">Tusken Raider</div>
             <img src="{{ url_for('static', filename='tusken.jpg') }}" alt="Enemy">
         </div>
 
@@ -121,7 +120,6 @@
             <div class="character-name" id="playerName">{{ player_name }}</div>
             <img src="{{ url_for('static', filename=player_image) }}" alt="Player">
         </div>
-
     </div>
 
     <div class="battle-info">
@@ -132,53 +130,93 @@
     </div>
 
     <script>
-        // Example health values for player and enemy
-        let playerHealth = 100;
-        let enemyHealth = 100;
+        // Character stats from backend
+        const playerMaxHealth = {{ character.health }};
+        const playerAttack = {{ character.attack }};
+        const playerDefense = {{ character.defense }};
 
-        // Update health bars on screen
+        // Example enemy stats (you might want to generate these dynamically)
+        const enemyMaxHealth = 100;
+        const enemyAttack = 15;
+        const enemyDefense = 5;
+
+        // Current health values
+        let playerHealth = playerMaxHealth;
+        let enemyHealth = enemyMaxHealth;
+
+        // Update health bars and text on screen
         function updateHealthBars() {
-            document.getElementById('playerHealthBar').style.width = playerHealth + '%';
-            document.getElementById('enemyHealthBar').style.width = enemyHealth + '%';
+            const playerHealthBar = document.getElementById('playerHealthBar');
+            const enemyHealthBar = document.getElementById('enemyHealthBar');
+
+            playerHealthBar.style.width = (playerHealth / playerMaxHealth * 100) + '%';
+            enemyHealthBar.style.width = (enemyHealth / enemyMaxHealth * 100) + '%';
         }
 
         // Attack function (player's turn)
         function attack() {
-            // Reduce enemy health by a fixed amount
-            enemyHealth -= 10;
+            // Calculate damage based on attack stat, with some randomness
+            let baseDamage = playerAttack;
+            let damage = Math.floor(Math.random() * (baseDamage * 1.5 - baseDamage * 0.5) + baseDamage * 0.5);
+            
+            // Reduce enemy health, considering enemy's defense
+            let actualDamage = Math.max(0, damage - enemyDefense);
+            enemyHealth -= actualDamage;
+            
             if (enemyHealth < 0) enemyHealth = 0;
+            
             // Update health bars
             updateHealthBars();
             checkBattleOutcome();
+            
             // Trigger enemy attack after player's turn
             setTimeout(enemyAttack, 1000); // AI attack after 1 second
         }
 
         // Defend function (player's turn)
         function defend() {
-            // Just an example where defending reduces incoming damage
-            playerHealth += 5; // Defend gives a little health back
-            if (playerHealth > 100) playerHealth = 100; // Cap health to 100
+            // Increase defense temporarily
+            let tempDefense = playerDefense * 2;
+            
+            // Reduce damage when enemy attacks
+            setTimeout(() => {
+                tempDefense = playerDefense;
+            }, 1000);
+            
+            // Small health regeneration
+            playerHealth += 10;
+            if (playerHealth > playerMaxHealth) playerHealth = playerMaxHealth;
+            
             updateHealthBars();
+            
             // Trigger enemy attack after player's turn
-            setTimeout(enemyAttack, 1000); // AI attack after 1 second
+            setTimeout(enemyAttack, 1000);
         }
 
         // Use item function (player's turn)
         function useItem() {
-            // Example item usage
-            playerHealth += 10; // Use item to heal player
-            if (playerHealth > 100) playerHealth = 100;
+            // Heal player based on a percentage of max health
+            playerHealth += Math.floor(playerMaxHealth * 0.25);
+            if (playerHealth > playerMaxHealth) playerHealth = playerMaxHealth;
+            
             updateHealthBars();
+            
             // Trigger enemy attack after player's turn
-            setTimeout(enemyAttack, 1000); // AI attack after 1 second
+            setTimeout(enemyAttack, 1000);
         }
 
         // Enemy Attack function (AI turn)
         function enemyAttack() {
-            let damage = Math.floor(Math.random() * 20) + 5;  // Random damage between 5 and 25
-            playerHealth -= damage;
+            // Calculate damage based on enemy attack, with some randomness
+            let baseDamage = enemyAttack;
+            let damage = Math.floor(Math.random() * (baseDamage * 1.5 - baseDamage * 0.5) + baseDamage * 0.5);
+            
+            // Reduce player health, considering player's defense
+            let actualDamage = Math.max(0, damage - playerDefense);
+            playerHealth -= actualDamage;
+            
             if (playerHealth < 0) playerHealth = 0;
+            
             updateHealthBars();
             checkBattleOutcome();
         }
@@ -187,8 +225,10 @@
         function checkBattleOutcome() {
             if (enemyHealth === 0) {
                 alert('You have defeated the enemy!');
+                // Here you could add logic to award credits or experience
             } else if (playerHealth === 0) {
                 alert('You have been defeated!');
+                // Here you could add logic for game over
             }
         }
 

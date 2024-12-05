@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Star Wars Trivia quiz - Star Wars RPG</title>
+    <title>Star Wars Trivia Quiz - Star Wars RPG</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         body {
@@ -115,16 +115,23 @@
         .modal button:hover {
             background-color: #45a049;
         }
+
+        .credits-display {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <h1>Star Wars Trivia Quiz</h1>
+    <audio id="victorySound" src="{{ url_for('static', filename='victory.mp3') }}" preload="auto"></audio>
+    <div class="credits-display" id="creditsDisplay">Credits: 0</div>
     <div class="quiz-container">
         <div class="question" id="question"></div>
         <div class="options" id="options"></div>
         <div class="feedback" id="feedback"></div>
         <div class="counter" id="counter">Correct Answers: 0 / 5</div>
-        <div class="loss-counter" id="lossCounter">Losses Left: 2</div>
+        <div class="loss-counter" id="lossCounter">Losses Left: 3</div>
     </div>
     <button onclick="window.location.href='{{ url_for('tatooine') }}'">Return to Tatooine</button>
 
@@ -132,6 +139,7 @@
     <div class="modal" id="resultModal">
         <div class="modal-content">
             <h2 id="modalMessage"></h2>
+            <p id="creditsEarnedMessage"></p>
             <button onclick="playAgain()">Play Again</button>
             <button onclick="returnToTatooine()">Return to Tatooine</button>
         </div>
@@ -165,34 +173,94 @@
                 answer: "Kashyyyk"
             },
             {
-                question: "Which droid has a protocol designation of C-3PO?",
-                options: ["R2-D2", "C-3PO", "BB-8", "L3-37"],
-                answer: "C-3PO"
-            },
-            {
-                question: "What is the name of Han Solo's best friend and co-pilot?",
-                options: ["Chewbacca", "Lando Calrissian", "Boba Fett", "Jabba the Hutt"],
-                answer: "Chewbacca"
-            },
-            {
-                question: "Who was the first Jedi?",
-                options: ["Qui-Gon Jinn", "Anakin Skywalker", "Yoda", "The Force"],
-                answer: "Anakin Skywalker"
-            },
-            {
-                question: "Which Star Wars movie was released first?",
-                options: ["The Empire Strikes Back", "Return of the Jedi", "A New Hope", "The Phantom Menace"],
-                answer: "A New Hope"
-            },
-            {
-                question: "Who trained Obi-Wan Kenobi?",
-                options: ["Qui-Gon Jinn", "Yoda", "Anakin Skywalker", "Darth Sidious"],
-                answer: "Qui-Gon Jinn"
+                question: "Who destroyed the first Death Star?",
+                options: ["Luke Skywalker", "Han Solo", "Darth Vader", "Leia Organa"],
+                answer: "Luke Skywalker"
             },
             {
                 question: "What is the primary weapon of a Jedi?",
-                options: ["Blaster", "Lightsaber", "Vibroblade", "Bowcaster"],
+                options: ["Blaster", "Lightsaber", "Thermal Detonator", "Vibroblade"],
                 answer: "Lightsaber"
+            },
+            {
+                question: "Which planet is the capital of the Galactic Republic?",
+                options: ["Coruscant", "Naboo", "Alderaan", "Kamino"],
+                answer: "Coruscant"
+            },
+            {
+                question: "What species is Darth Maul?",
+                options: ["Zabrak", "Twi'lek", "Rodian", "Togruta"],
+                answer: "Zabrak"
+            },
+            {
+                question: "Who built C-3PO?",
+                options: ["Anakin Skywalker", "Luke Skywalker", "Han Solo", "Obi-Wan Kenobi"],
+                answer: "Anakin Skywalker"
+            },
+            {
+                question: "What is the name of Boba Fett's father?",
+                options: ["Jango Fett", "Darth Vader", "Han Solo", "Qui-Gon Jinn"],
+                answer: "Jango Fett"
+            },
+            {
+                question: "Which Jedi Master trained both Count Dooku and Qui-Gon Jinn?",
+                options: ["Yoda", "Mace Windu", "Plo Koon", "Dooku"],
+                answer: "Yoda"
+            },
+            {
+                question: "What is the name of the forest moon where the Ewoks live?",
+                options: ["Yavin 4", "Endor", "Hoth", "Dagobah"],
+                answer: "Endor"
+            },
+            {
+                question: "What is the name of Han Solo's home planet?",
+                options: ["Tatooine", "Corellia", "Naboo", "Alderaan"],
+                answer: "Corellia"
+            },
+            {
+                question: "Who killed Emperor Palpatine in Return of the Jedi?",
+                options: ["Luke Skywalker", "Darth Vader", "Obi-Wan Kenobi", "Yoda"],
+                answer: "Darth Vader"
+            },
+            {
+                question: "What is the primary language spoken by Wookiees?",
+                options: ["Basic", "Huttese", "Shyriiwook", "Bocce"],
+                answer: "Shyriiwook"
+            },
+            {
+                question: "Which planet is the home of the clone army?",
+                options: ["Geonosis", "Kamino", "Coruscant", "Naboo"],
+                answer: "Kamino"
+            },
+            {
+                question: "What is Padmé Amidala's home planet?",
+                options: ["Tatooine", "Naboo", "Alderaan", "Coruscant"],
+                answer: "Naboo"
+            },
+            {
+                question: "Who was Anakin Skywalker's first Jedi Master?",
+                options: ["Obi-Wan Kenobi", "Qui-Gon Jinn", "Mace Windu", "Yoda"],
+                answer: "Obi-Wan Kenobi"
+            },
+            {
+                question: "What type of ship is the Slave 1?",
+                options: ["X-Wing", "TIE Fighter", "Firespray-class Interceptor", "Star Destroyer"],
+                answer: "Firespray-class Interceptor"
+            },
+            {
+                question: "Which Sith Lord was known as the 'Darth of Betrayal'?",
+                options: ["Darth Vader", "Darth Maul", "Darth Tyranus", "Darth Plagueis"],
+                answer: "Darth Plagueis"
+            },
+            {
+                question: "What is the name of Anakin Skywalker's mother?",
+                options: ["Padmé Amidala", "Shmi Skywalker", "Beru Lars", "Lyra Erso"],
+                answer: "Shmi Skywalker"
+            },
+            {
+                question: "Which planet was the site of the final battle in Return of the Jedi?",
+                options: ["Hoth", "Endor", "Yavin 4", "Tatooine"],
+                answer: "Endor"
             }
         ];
 
@@ -200,6 +268,47 @@
         let currentQuestionIndex = 0;
         let correctAnswersCount = 0;
         let lossCount = 0;  // Track number of incorrect attempts
+        let credits = 0;
+
+        // Fetch current credits when the page loads
+        fetchCurrentCredits();
+
+        function fetchCurrentCredits() {
+            fetch('/load_game')
+                .then(response => response.json())
+                .then(data => {
+                    credits = data.credits || 0;
+                    updateCreditsDisplay();
+                })
+                .catch(error => {
+                    console.error('Error fetching credits:', error);
+                });
+        }
+
+        function updateCreditsDisplay() {
+            const creditsDisplay = document.getElementById('creditsDisplay');
+            creditsDisplay.textContent = `Credits: ${credits}`;
+        }
+
+        function awardCredits(amount) {
+            fetch('/award_credits', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ credits: amount })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.credits !== undefined) {
+                    credits = data.credits;
+                    updateCreditsDisplay();
+                }
+            })
+            .catch(error => {
+                console.error('Error awarding credits:', error);
+            });
+        }
 
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -235,7 +344,7 @@
 
         function updateLossCounter() {
             const lossCounterElement = document.getElementById('lossCounter');
-            lossCounterElement.innerText = `Losses Left: ${2 - lossCount}`;
+            lossCounterElement.innerText = `Losses Left: ${3 - lossCount}`;
         }
 
         function checkAnswer(selectedOption, correctAnswer) {
@@ -247,7 +356,9 @@
 
                 if (correctAnswersCount >= 5) {
                     setTimeout(() => {
-                        showResultModal("Congratulations! You've completed the quiz!");
+                        // Award 50 credits for completing the quiz
+                        awardCredits(50);
+                        showResultModal("Congratulations! You've completed the quiz!", 50);
                     }, 500);
                     return;
                 }
@@ -256,14 +367,13 @@
                 lossCount++;
                 updateLossCounter();
 
-                if (lossCount >= 2) {
+                if (lossCount >= 3) {
                     setTimeout(() => {
-                        showResultModal("You've lost too many times. Returning to Tatooine...");
+                        showResultModal("You've lost too many times. Returning to Tatooine...", 0);
                     }, 500);
                 }
             }
 
-            // Move to next question
             currentQuestionIndex++;
             if (currentQuestionIndex < shuffledQuestions.length) {
                 setTimeout(() => {
@@ -272,11 +382,25 @@
             }
         }
 
-        function showResultModal(message) {
+        function showResultModal(message, creditsEarned) {
             const modal = document.getElementById('resultModal');
             const modalMessage = document.getElementById('modalMessage');
+            const creditsEarnedMessage = document.getElementById('creditsEarnedMessage');
+            
             modalMessage.innerText = message;
+            
+            if (creditsEarned > 0) {
+                creditsEarnedMessage.innerText = `You earned ${creditsEarned} credits!`;
+            } else {
+                creditsEarnedMessage.innerText = '';
+            }
+            
             modal.style.display = 'flex';
+
+            if (message.includes("Congratulations")) {
+                const victorySound = document.getElementById('victorySound');
+                victorySound.play();
+            }
         }
 
         function playAgain() {
@@ -288,7 +412,6 @@
         }
 
         displayQuestion(shuffledQuestions[currentQuestionIndex]);
-
     </script>
 </body>
 </html>

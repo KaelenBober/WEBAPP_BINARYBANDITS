@@ -70,17 +70,29 @@
     </div>
 </div>
 
-<!-- Upgrade Stats Overlay -->
-<div id="upgradeStatsOverlay" class="overlay" style="display: none;">
-    <div class="overlay-content">
-        <h3>Upgrade Stats</h3>
-        <p>Credits: <span id="credits">{{ user.credits }}</span></p>
-        <button onclick="upgradeStat('health', 10)">Upgrade Health (10 credits)</button>
-        <button onclick="upgradeStat('attack', 15)">Upgrade Attack (15 credits)</button>
-        <button onclick="upgradeStat('defense', 15)">Upgrade Defense (15 credits)</button>
-        <button id="returnUpgradeButton" class="return-button" onclick="hideUpgradeStatsOverlay()">Return</button>
+    <!-- Upgrade Stats Overlay -->
+    <div id="upgradeStatsOverlay" class="overlay star-wars-overlay" style="display: none;">
+        <div class="overlay-content">
+            <h3 class="star-wars-title">Upgrade Your Stats</h3>
+            <p class="star-wars-credits">Credits: <span id="credits">{{ user.credits }}</span></p>
+            <div class="upgrade-buttons">
+                <button class="star-wars-button" onclick="upgradeStat('health', 10)">
+                    Upgrade Health (10 credits)
+                </button>
+                <button class="star-wars-button" onclick="upgradeStat('attack', 15)">
+                    Upgrade Attack (15 credits)
+                </button>
+                <button class="star-wars-button" onclick="upgradeStat('defense', 15)">
+                    Upgrade Defense (15 credits)
+                </button>
+            </div>
+            <div class="return-button-container">
+                <button id="returnUpgradeButton" class="star-wars-button return-button" onclick="hideUpgradeStatsOverlay()">
+                    Return
+                </button>
+            </div>
     </div>
-</div>
+
 
 <script>
     // Show Planet Selection Overlay
