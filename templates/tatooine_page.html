@@ -63,35 +63,6 @@
         .game-button:hover {
             transform: scale(1.1);  /* Make the image slightly bigger on hover */
         }
-
-        /* Specific positions for each button */
-        #ticTacToeButton {
-            top: 20%;
-            left: 40%;
-        }
-
-        #crossword {
-            top: 40%;
-            left: 10%;
-        }
-
-        #pongButton {
-            top: 30%;
-            left: 75%;
-        }
-
-        #rpsButton {
-            top: 80%;
-            left: 10%;
-        }
-
-        #returnButton {
-            top: 80%;
-            left: 90%;
-            width: 200px;  /* Adjust size of the image */
-            height: 200px; /* Adjust size of the image */
-            transform: translate(-50%, -50%);
-        }
     </style>
 </head>
 <body>
@@ -105,13 +76,6 @@
         <div class="welcome-text" id="welcomeText">
             Welcome to Tatooine
         </div>
-
-        <!-- Image buttons -->
-        <img id="returnButton" class="game-button" src="{{ url_for('static', filename='returnship.png') }}" onclick="window.location.href='{{ url_for('game') }}'" alt="Return to Game">
-        <img id="ticTacToeButton" class="game-button" src="{{ url_for('static', filename='droidtictactoe.png') }}" onclick="window.location.href='{{ url_for('tic_tac_toe') }}'" alt="Play Tic Tac Toe">
-        <img id="crossword" class="game-button" src="{{ url_for('static', filename='gonkdroidtrivia.png') }}" onclick="window.location.href='{{ url_for('crossword') }}'" alt="Play Trivia">
-        <img id="rpsButton" class="game-button" src="{{ url_for('static', filename='tusken.png') }}" onclick="window.location.href='{{ url_for('battle') }}'" alt="Fight Boss">
-        <img id="pongButton" class="game-button" src="{{ url_for('static', filename='jawapong.png') }}" onclick="window.location.href='{{ url_for('pong') }}'" alt="Play Pong">
 
     </div>
 
@@ -153,42 +117,114 @@
         character.src = `{{ url_for("static", filename="") }}${characterImagePath}`;
 
         // Character initial position
-        let posX = canvas.width / 1.5;
-        let posY = canvas.height / 1.5;
+        let posX = canvas.width / 2;
+        let posY = canvas.height / 2;
         const moveSpeed = 10;
 
-        // Draw function to render background and character
-        function draw() {
-            // Clear the canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Define the images and their positions on the canvas
+        const imageButtons = [
+            { 
+                id: 'ticTacToeButton', 
+                src: '{{ url_for("static", filename="droidtictactoe.png") }}', 
+                x: 400, 
+                y: 140, 
+                width: 75, 
+                height: 75, 
+                action: () => window.location.href = '{{ url_for("tic_tac_toe") }}'
+            },
+            { 
+                id: 'crossword', 
+                src: '{{ url_for("static", filename="gonkdroidtrivia.png") }}', 
+                x: 120, 
+                y: 280, 
+                width: 75, 
+                height: 75, 
+                action: () => window.location.href = '{{ url_for("crossword") }}'
+            },
+            { 
+                id: 'pongButton', 
+                src: '{{ url_for("static", filename="jawapong.png") }}', 
+                x: 900, 
+                y: 210, 
+                width: 75, 
+                height: 75, 
+                action: () => window.location.href = '{{ url_for("pong") }}'
+            },
+            { 
+                id: 'rpsButton', 
+                src: '{{ url_for("static", filename="tusken.png") }}', 
+                x: 120, 
+                y: 560, 
+                width: 75, 
+                height: 75, 
+                action: () => window.location.href = '{{ url_for("battle") }}'
+            },
+            { 
+                id: 'returnButton', 
+                src: '{{ url_for("static", filename="returnship.png") }}', 
+                x: 920, 
+                y: 560, 
+                width: 200, 
+                height: 200, 
+                action: () => window.location.href = '{{ url_for("game") }}'
+            }
+        ];
 
-            // Draw the background image
-            ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+        // Preload button images
+        imageButtons.forEach(button => {
+            const img = new Image();
+            img.src = button.src;
+            button.image = img;  // Attach the loaded image to the button
+        });
 
-            // Draw the character (scaled to 50x50 px)
-            ctx.drawImage(character, posX, posY, 100, 100);
+        // Function to check if the player intersects with an image button
+        function checkImageButtonCollision() {
+            for (let button of imageButtons) {
+                if (
+                    posX + 50 > button.x && 
+                    posX < button.x + button.width && 
+                    posY + 50 > button.y && 
+                    posY < button.y + button.height
+                ) {
+                    button.action();
+                    break;
+                }
+            }
         }
 
-        // Handle keyboard input to move the character
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'w' && posY > 0) {
-                posY -= moveSpeed; // Move up, but not beyond top edge
-            }
-            if (event.key === 's' && posY < canvas.height - 50) {
-                posY += moveSpeed; // Move down, but not beyond bottom edge
-            }
-            if (event.key === 'a' && posX > 0) {
-                posX -= moveSpeed; // Move left, but not beyond left edge
-            }
-            if (event.key === 'd' && posX < canvas.width - 50) {
-                posX += moveSpeed; // Move right, but not beyond right edge
-            }
+        // Draw function to render the canvas
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Redraw after moving the character
+            // Draw the background
+            ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+
+            // Draw the character
+            ctx.drawImage(character, posX, posY, 100, 100);
+
+            // Draw the buttons
+            for (let button of imageButtons) {
+                if (button.image.complete) {
+                    ctx.drawImage(button.image, button.x, button.y, button.width, button.height);
+                }
+            }
+        }
+
+        // Handle keyboard input for character movement
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'w' && posY > 0) posY -= moveSpeed;
+            if (event.key === 's' && posY < canvas.height - 100) posY += moveSpeed;
+            if (event.key === 'a' && posX > 0) posX -= moveSpeed;
+            if (event.key === 'd' && posX < canvas.width - 100) posX += moveSpeed;
+
+            // Check collision with buttons
+            checkImageButtonCollision();
+
+            // Redraw after movement
             draw();
         });
 
-        // Once the background image is loaded, draw everything
+        // Draw everything once the background image loads
         bgImage.onload = draw;
 
         // Welcome text animation (change font letter by letter)
@@ -217,14 +253,13 @@
                         clearInterval(fontChangeInterval);  // Stop after all letters are changed
                     }
                 }, 100);  // Adjust speed of font change
-            }, 2000);  // Wait for 2 seconds before starting font change
+            }, 4000);  // Wait for 4 seconds before starting font change
 
-            // Start the fade-out after 20 seconds
+            // Start the fade-out after 7 seconds
             setTimeout(() => {
-                welcomeTextElement.style.animation = "fadeOut 10s forwards";  // Start fade-out animation after 20 seconds
-            }, 7000);  // Fade-out starts after 7 seconds
+                welcomeTextElement.style.animation = "fadeOut 10s forwards";  // Start fading out
+            }, 7000);  // Start fading after 7 seconds
         });
     </script>
-
 </body>
 </html>
