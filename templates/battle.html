@@ -6,14 +6,13 @@
     <title>Star Wars RPG - Battle</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        /* Custom Star Wars title font */
         @font-face {
             font-family: 'StarWarsTitle';
             src: url('{{ url_for('static', filename='Starjedi.ttf') }}') format('truetype');
         }
 
         body {
-            background-color: #000000;
+            background-color: #000;
             color: #f0f0f0;
             font-family: 'StarWarsTitle', sans-serif;
             text-align: center;
@@ -41,11 +40,11 @@
         }
 
         .health-bar-player {
-            background-color: #00ff00; /* Green for player */
+            background-color: #00ff00;
         }
 
         .health-bar-enemy {
-            background-color: #ff0000; /* Red for enemy */
+            background-color: #ff0000;
         }
 
         .character-container {
@@ -55,7 +54,6 @@
         }
 
         .character {
-            position: relative;
             width: 200px;
             height: 300px;
         }
@@ -68,7 +66,6 @@
 
         .character-name {
             font-size: 1.5rem;
-            font-weight: bold;
             color: #ffcc00;
         }
 
@@ -78,8 +75,7 @@
             padding: 10px 20px;
             text-decoration: none;
             border-radius: 5px;
-            margin-top: 20px;
-            display: inline-block;
+            margin: 10px;
             font-weight: bold;
         }
 
@@ -89,7 +85,6 @@
 
         .battle-info {
             font-size: 1.2rem;
-            color: #fff;
             margin: 20px;
         }
 
@@ -98,32 +93,31 @@
             margin-top: 20px;
             color: #fff;
         }
+
+        .return-button-container {
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>
     <h1>Star Wars RPG Battle</h1>
 
     <div class="health-bar-container">
-        <!-- Player Health Bar -->
         <div class="health-bar">
             <div id="playerHealthBar" class="health-bar-inner health-bar-player" style="width: 100%"></div>
         </div>
-        <!-- Enemy Health Bar -->
         <div class="health-bar">
             <div id="enemyHealthBar" class="health-bar-inner health-bar-enemy" style="width: 100%"></div>
         </div>
     </div>
 
     <div class="character-container">
-        <!-- Enemy Character -->
         <div class="character">
             <div class="character-name" id="enemyName">Tusken Raider</div>
             <img src="{{ url_for('static', filename='tusken.png') }}" alt="Enemy">
         </div>
-
-        <!-- Player Character -->
         <div class="character">
-            <div class="character-name" id="playerName">{{ player_name }}</div>
+            <div class="character-name" id="playerName">{{ character.name }}</div>
             <img src="{{ url_for('static', filename=player_image) }}" alt="Player">
         </div>
     </div>
@@ -135,120 +129,94 @@
         <button class="action-button" onclick="useItem()">Use Item</button>
     </div>
 
+    <div class="return-button-container">
+        <a href="/tatooine" class="action-button">Return to Tatooine</a>
+    </div>
+
     <div class="stats">
         <p>Player Health: <span id="playerHealthText">{{ character.health }}</span></p>
         <p>Enemy Health: <span id="enemyHealthText">100</span></p>
+        <p>Player Attack: {{ character.attack }}</p>
+        <p>Player Defense: {{ character.defense }}</p>
     </div>
 
     <script>
-        // Character stats from backend
         const playerMaxHealth = {{ character.health }};
         const playerAttack = {{ character.attack }};
         const playerDefense = {{ character.defense }};
 
-        // Example enemy stats (you might want to generate these dynamically)
         const enemyMaxHealth = 100;
         const enemyAttack = 15;
         const enemyDefense = 5;
 
-        // Current health values
         let playerHealth = playerMaxHealth;
         let enemyHealth = enemyMaxHealth;
 
-        // Update health bars and text on screen
         function updateHealthBars() {
-            const playerHealthBar = document.getElementById('playerHealthBar');
-            const enemyHealthBar = document.getElementById('enemyHealthBar');
-            const playerHealthText = document.getElementById('playerHealthText');
-            const enemyHealthText = document.getElementById('enemyHealthText');
-
-            playerHealthBar.style.width = (playerHealth / playerMaxHealth * 100) + '%';
-            enemyHealthBar.style.width = (enemyHealth / enemyMaxHealth * 100) + '%';
-
-            playerHealthText.textContent = playerHealth;
-            enemyHealthText.textContent = enemyHealth;
+            document.getElementById('playerHealthBar').style.width = (playerHealth / playerMaxHealth * 100) + '%';
+            document.getElementById('enemyHealthBar').style.width = (enemyHealth / enemyMaxHealth * 100) + '%';
+            document.getElementById('playerHealthText').textContent = playerHealth;
+            document.getElementById('enemyHealthText').textContent = enemyHealth;
         }
 
-        // Attack function (player's turn)
         function attack() {
-            // Calculate damage based on attack stat, with some randomness
-            let baseDamage = playerAttack;
-            let damage = Math.floor(Math.random() * (baseDamage * 1.5 - baseDamage * 0.5) + baseDamage * 0.5);
-            
-            // Reduce enemy health, considering enemy's defense
-            let actualDamage = Math.max(0, damage - enemyDefense);
-            enemyHealth -= actualDamage;
-            
+            // Calculate damage purely based on stats
+            const damage = Math.max(0, playerAttack - enemyDefense);
+            enemyHealth -= damage;
+
+            // Ensure enemy health doesn't drop below zero
             if (enemyHealth < 0) enemyHealth = 0;
-            
-            // Update health bars
-            updateHealthBars();
-            checkBattleOutcome();
-            
-            // Trigger enemy attack after player's turn
-            setTimeout(enemyAttack, 1000); // AI attack after 1 second
-        }
 
-        // Defend function (player's turn)
-        function defend() {
-            // Increase defense temporarily
-            let tempDefense = playerDefense * 2;
-            
-            // Reduce damage when enemy attacks
-            setTimeout(() => {
-                tempDefense = playerDefense;
-            }, 1000);
-            
-            // Small health regeneration
-            playerHealth += 10;
-            if (playerHealth > playerMaxHealth) playerHealth = playerMaxHealth;
-            
+            // Update the UI
             updateHealthBars();
-            
-            // Trigger enemy attack after player's turn
-            setTimeout(enemyAttack, 1000);
-        }
 
-        // Use item function (player's turn)
-        function useItem() {
-            // Heal player based on a percentage of max health
-            playerHealth += Math.floor(playerMaxHealth * 0.25);
-            if (playerHealth > playerMaxHealth) playerHealth = playerMaxHealth;
-            
-            updateHealthBars();
-            
-            // Trigger enemy attack after player's turn
-            setTimeout(enemyAttack, 1000);
-        }
-
-        // Enemy Attack function (AI turn)
-        function enemyAttack() {
-            // Calculate damage based on enemy attack, with some randomness
-            let baseDamage = enemyAttack;
-            let damage = Math.floor(Math.random() * (baseDamage * 1.5 - baseDamage * 0.5) + baseDamage * 0.5);
-            
-            // Reduce player health, considering player's defense
-            let actualDamage = Math.max(0, damage - playerDefense);
-            playerHealth -= actualDamage;
-            
-            if (playerHealth < 0) playerHealth = 0;
-            
-            updateHealthBars();
-            checkBattleOutcome();
-        }
-
-        // Check if the battle is over
-        function checkBattleOutcome() {
-            if (enemyHealth === 0) {
-                alert('You have defeated the enemy!');
-                // Here you could add logic to award credits or experience
-            } else if (playerHealth === 0) {
-                alert('You have been defeated!');
-                // Here you could add logic for game over
+            // Check for victory or let enemy attack
+            if (enemyHealth > 0) {
+                setTimeout(enemyAttack, 1000); // Enemy attacks after 1 second
+            } else {
+                alert('You defeated the enemy!');
             }
         }
 
-        // Initial health bar setup
+
+        function defend() {
+            // Heal based on player's defense value
+            playerHealth += playerDefense;
+
+            // Cap health at max value
+            if (playerHealth > playerMaxHealth) playerHealth = playerMaxHealth;
+
+            // Update the UI
+            updateHealthBars();
+
+            // Enemy attacks after defense
+            setTimeout(enemyAttack, 1000);
+        }
+
+
+        function useItem() {
+            // Heal a percentage of max health
+            playerHealth += Math.floor(playerMaxHealth * 0.25);
+
+            // Cap health at max value
+            if (playerHealth > playerMaxHealth) playerHealth = playerMaxHealth;
+
+            // Update the UI
+            updateHealthBars();
+
+            // Enemy attacks after item usage
+            setTimeout(enemyAttack, 1000);
+        }
+
+
+        function enemyAttack() {
+            const damage = Math.max(0, Math.floor(Math.random() * enemyAttack) - playerDefense);
+            playerHealth -= damage;
+            if (playerHealth < 0) playerHealth = 0;
+            updateHealthBars();
+            if (playerHealth === 0) alert('You have been defeated!');
+        }
+
         updateHealthBars();
     </script>
 </body>

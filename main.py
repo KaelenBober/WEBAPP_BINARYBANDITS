@@ -365,9 +365,6 @@ def battle():
     # Get the player image or fallback to a default
     player_image = character_image_mapping.get(character_type, 'default_imagechar.png')
 
-    # Get player name or fallback to a default
-    player_name = session.get('player_name', 'Player')  # Default name if not set
-
     # Fetch the selected character from the database
     selected_character_id = session.get('selected_character_id')
     character = Character.query.get(selected_character_id)
@@ -377,11 +374,14 @@ def battle():
         return redirect(url_for('character_creation'))
 
     # Pass character stats (health, attack, defense) to the template
-    return render_template('battle.html', player_image=player_image, player_name=player_name,
-                           character=character, health=character.health, attack=character.attack, defense=character.defense)
-
-
-
+    return render_template(
+        'battle.html',
+        player_image=player_image,
+        character=character,
+        health=character.health,
+        attack=character.attack,
+        defense=character.defense
+    )
 
 
 # @app.route('/hoth')

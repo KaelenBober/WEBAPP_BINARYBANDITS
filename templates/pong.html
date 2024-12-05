@@ -75,13 +75,14 @@
         let ballSpeedX = 5, ballSpeedY = 5;
         let score1 = 0, score2 = 0;
 
-        const paddleSpeed = 5; // Smooth movement speed
-        let paddle1Up = false, paddle1Down = false; // Track Player 1 keypresses
+        const paddleSpeed = 5;
+        let paddle1Up = false, paddle1Down = false;
 
-        let speedMultiplier = 1.0; // Multiplier for ball speed
-        const speedIncrement = 0.001; // Incremental speed increase
+        let speedMultiplier = 1.0;
+        const speedIncrement = 0.001;
 
-        // Define fixed initial speed values
+        const winningScore = 1;
+
         const initialBallSpeedX = 5;
         const initialBallSpeedY = 5;
 
@@ -89,55 +90,67 @@
             ballX = pongCanvas.width / 2;
             ballY = pongCanvas.height / 2;
 
-            // Reset the ball speed completely
-            ballSpeedX = initialBallSpeedX * (Math.random() < 0.5 ? 1 : -1); // Random horizontal direction
-            ballSpeedY = initialBallSpeedY * (Math.random() < 0.5 ? 1 : -1); // Random vertical direction
+            ballSpeedX = initialBallSpeedX * (Math.random() < 0.5 ? 1 : -1);
+            ballSpeedY = initialBallSpeedY * (Math.random() < 0.5 ? 1 : -1);
 
-            // Reset the speed multiplier
-            speedMultiplier = 1.0; // Reset to original speed
+            speedMultiplier = 1.0;
+        }
+
+        function checkWin() {
+            if (score1 === winningScore) {
+                alert("Congratulations! You won!");
+                if (confirm("Would you like to play again?")) {
+                    restartGame();
+                } else {
+                    window.location.href = '{{ url_for("tatooine") }}';
+                }
+            } else if (score2 === winningScore) {
+                alert("The AI has won. Better luck next time!");
+                if (confirm("Would you like to play again?")) {
+                    restartGame();
+                } else {
+                    window.location.href = '{{ url_for("tatooine") }}';
+                }
+            }
+        }
+
+        function restartGame() {
+            score1 = 0;
+            score2 = 0;
+            resetBall();
+            speedMultiplier = 1.0;
         }
 
         function pongGameLoop() {
             pongCtx.clearRect(0, 0, pongCanvas.width, pongCanvas.height);
 
-            // Increase speed multiplier gradually (remove if you want no incremental speed change)
             speedMultiplier += speedIncrement;
 
-            // Move Paddle 1 based on input
             if (paddle1Up && paddle1Y > 0) paddle1Y -= paddleSpeed;
             if (paddle1Down && paddle1Y < pongCanvas.height - paddleHeight) paddle1Y += paddleSpeed;
 
-            // AI for Paddle 2 (right paddle)
             if (ballY < paddle2Y + paddleHeight / 2) paddle2Y -= paddleSpeed;
             if (ballY > paddle2Y + paddleHeight / 2) paddle2Y += paddleSpeed;
 
-            // Draw paddles
-            pongCtx.fillStyle = '#FFD700'; // Golden yellow
+            pongCtx.fillStyle = '#FFD700';
             pongCtx.fillRect(0, paddle1Y, paddleWidth, paddleHeight);
             pongCtx.fillRect(pongCanvas.width - paddleWidth, paddle2Y, paddleWidth, paddleHeight);
 
-            // Ball movement
             ballX += ballSpeedX * speedMultiplier;
             ballY += ballSpeedY * speedMultiplier;
 
             if (ballY <= 0 || ballY + ballSize >= pongCanvas.height) ballSpeedY = -ballSpeedY;
 
-            // Ball bounce logic based on paddle hit
             if (
                 (ballX <= paddleWidth && ballY >= paddle1Y && ballY <= paddle1Y + paddleHeight) ||
                 (ballX + ballSize >= pongCanvas.width - paddleWidth && ballY >= paddle2Y && ballY <= paddle2Y + paddleHeight)
             ) {
                 ballSpeedX = -ballSpeedX;
-
-                // Calculate the Y distance from the center of the paddle
                 let paddleCenterY = (ballX <= paddleWidth) ? paddle1Y + paddleHeight / 2 : paddle2Y + paddleHeight / 2;
                 let distanceFromCenter = ballY - paddleCenterY;
-
-                // Apply smaller, gradual impact to ballSpeedY to make the change smoother
-                ballSpeedY += distanceFromCenter / 25; // Smaller number for smoother impact
+                ballSpeedY += distanceFromCenter / 25;
             }
 
-            // Check for scoring
             if (ballX <= 0) {
                 score2++;
                 resetBall();
@@ -147,19 +160,18 @@
                 resetBall();
             }
 
-            // Draw ball
             pongCtx.fillStyle = '#FFD700';
             pongCtx.fillRect(ballX, ballY, ballSize, ballSize);
 
-            // Draw scores
             pongCtx.font = '30px Starjedi';
             pongCtx.fillText(`Player 1: ${score1}`, 20, 40);
             pongCtx.fillText(`Player 2: ${score2}`, pongCanvas.width - 200, 40);
 
+            checkWin();
+
             requestAnimationFrame(pongGameLoop);
         }
 
-        // Keypress listeners for smoother paddle movement (only for Player 1)
         document.addEventListener('keydown', (event) => {
             if (event.key === 'w') paddle1Up = true;
             if (event.key === 's') paddle1Down = true;

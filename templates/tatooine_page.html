@@ -104,13 +104,13 @@
         } else if (characterType === 'sith') {
             characterImagePath = 'Sith_imagechar.png';
         } else if (characterType === 'bounty_hunter') {
-            characterImagePath = 'bounty_hunter_image.jpg';
+            characterImagePath = 'bounty_hunter_imagechar.png';
         } else if (characterType === 'droid') {
             characterImagePath = 'Droid_imagechar.png';
         } else if (characterType === 'mandalorian') {
             characterImagePath = 'Mandalorian_imagechar.png';
         } else if (characterType === 'smuggler') {
-            characterImagePath = 'smuggler_image.jpg';
+            characterImagePath = 'smuggler_imagechar.png';
         }
 
         // Set the character image source dynamically
@@ -128,8 +128,8 @@
                 src: '{{ url_for("static", filename="droidtictactoe.png") }}', 
                 x: 400, 
                 y: 140, 
-                width: 75, 
-                height: 75, 
+                width: 100, 
+                height: 100, 
                 action: () => window.location.href = '{{ url_for("tic_tac_toe") }}'
             },
             { 
@@ -137,8 +137,8 @@
                 src: '{{ url_for("static", filename="gonkdroidtrivia.png") }}', 
                 x: 120, 
                 y: 280, 
-                width: 75, 
-                height: 75, 
+                width: 100, 
+                height: 100, 
                 action: () => window.location.href = '{{ url_for("crossword") }}'
             },
             { 
@@ -146,8 +146,8 @@
                 src: '{{ url_for("static", filename="jawapong.png") }}', 
                 x: 900, 
                 y: 210, 
-                width: 75, 
-                height: 75, 
+                width: 100, 
+                height: 100, 
                 action: () => window.location.href = '{{ url_for("pong") }}'
             },
             { 
@@ -155,8 +155,8 @@
                 src: '{{ url_for("static", filename="tusken.png") }}', 
                 x: 120, 
                 y: 560, 
-                width: 75, 
-                height: 75, 
+                width: 100, 
+                height: 100, 
                 action: () => window.location.href = '{{ url_for("battle") }}'
             },
             { 
