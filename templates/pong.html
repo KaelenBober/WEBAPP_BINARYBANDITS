@@ -81,17 +81,26 @@
         let speedMultiplier = 1.0; // Multiplier for ball speed
         const speedIncrement = 0.001; // Incremental speed increase
 
+        // Define fixed initial speed values
+        const initialBallSpeedX = 5;
+        const initialBallSpeedY = 5;
+
         function resetBall() {
             ballX = pongCanvas.width / 2;
             ballY = pongCanvas.height / 2;
-            ballSpeedX = -ballSpeedX * 0.8; // Reset speed to avoid endless acceleration
-            ballSpeedY = ballSpeedY > 0 ? 5 : -5; // Reset speed direction
+
+            // Reset the ball speed completely
+            ballSpeedX = initialBallSpeedX * (Math.random() < 0.5 ? 1 : -1); // Random horizontal direction
+            ballSpeedY = initialBallSpeedY * (Math.random() < 0.5 ? 1 : -1); // Random vertical direction
+
+            // Reset the speed multiplier
+            speedMultiplier = 1.0; // Reset to original speed
         }
 
         function pongGameLoop() {
             pongCtx.clearRect(0, 0, pongCanvas.width, pongCanvas.height);
 
-            // Increase speed multiplier gradually
+            // Increase speed multiplier gradually (remove if you want no incremental speed change)
             speedMultiplier += speedIncrement;
 
             // Move Paddle 1 based on input
@@ -113,13 +122,22 @@
 
             if (ballY <= 0 || ballY + ballSize >= pongCanvas.height) ballSpeedY = -ballSpeedY;
 
+            // Ball bounce logic based on paddle hit
             if (
                 (ballX <= paddleWidth && ballY >= paddle1Y && ballY <= paddle1Y + paddleHeight) ||
                 (ballX + ballSize >= pongCanvas.width - paddleWidth && ballY >= paddle2Y && ballY <= paddle2Y + paddleHeight)
             ) {
                 ballSpeedX = -ballSpeedX;
+
+                // Calculate the Y distance from the center of the paddle
+                let paddleCenterY = (ballX <= paddleWidth) ? paddle1Y + paddleHeight / 2 : paddle2Y + paddleHeight / 2;
+                let distanceFromCenter = ballY - paddleCenterY;
+
+                // Apply smaller, gradual impact to ballSpeedY to make the change smoother
+                ballSpeedY += distanceFromCenter / 25; // Smaller number for smoother impact
             }
 
+            // Check for scoring
             if (ballX <= 0) {
                 score2++;
                 resetBall();
@@ -141,7 +159,7 @@
             requestAnimationFrame(pongGameLoop);
         }
 
-        // Keypress listeners for smoother paddle movement
+        // Keypress listeners for smoother paddle movement (only for Player 1)
         document.addEventListener('keydown', (event) => {
             if (event.key === 'w') paddle1Up = true;
             if (event.key === 's') paddle1Down = true;
@@ -153,10 +171,6 @@
         });
 
         pongGameLoop();
-
-
     </script>
 </body>
 </html>
-
-

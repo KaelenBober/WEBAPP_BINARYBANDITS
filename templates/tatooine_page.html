@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tatooine - Star Wars RPG</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    
+
     <!-- Background Audio -->
     <audio id="backgroundAudio" autoplay loop>
         <source src="{{ url_for('static', filename='tatooine_audio.mp3') }}" type="audio/mpeg">
@@ -50,41 +50,24 @@
             opacity: 1;
         }
 
-        /* Fade-out animation */
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-            }
-        }
-
-        /* Star Wars-style buttons */
-        button {
-            background-color: black;
-            color: #FFD700; /* Golden yellow text */
-            font-family: 'Starjedi', sans-serif;
-            font-size: 1.2em;
-            border: 2px solid #FFD700;
-            padding: 15px 30px;
-            cursor: pointer;
-            border-radius: 10px;
-            box-shadow: 0 0 15px #FFD700;
-            transition: all 0.3s ease-in-out;
+        /* Star Wars-style image buttons */
+        .game-button {
             position: absolute;
+            cursor: pointer;
+            width: 75px;  /* Adjust size of the image */
+            height: 75px; /* Adjust size of the image */
+            transition: transform 0.3s ease;
         }
 
-        button:hover {
-            background-color: #FFD700;
-            color: black;
-            box-shadow: 0 0 25px #FFD700, 0 0 50px #FFD700;
+        /* Hover effect for the buttons */
+        .game-button:hover {
+            transform: scale(1.1);  /* Make the image slightly bigger on hover */
         }
 
-        /* Specific button positions */
+        /* Specific positions for each button */
         #ticTacToeButton {
             top: 20%;
-            left: 10%;
+            left: 40%;
         }
 
         #crossword {
@@ -93,18 +76,20 @@
         }
 
         #pongButton {
-            top: 60%;
-            left: 10%;
+            top: 30%;
+            left: 75%;
         }
-        
+
         #rpsButton {
             top: 80%;
             left: 10%;
         }
 
         #returnButton {
-            top: 90%;
+            top: 80%;
             left: 90%;
+            width: 200px;  /* Adjust size of the image */
+            height: 200px; /* Adjust size of the image */
             transform: translate(-50%, -50%);
         }
     </style>
@@ -121,20 +106,12 @@
             Welcome to Tatooine
         </div>
 
-        <!-- Button to go back to the game -->
-        <button id="returnButton" onclick="window.location.href='{{ url_for('game') }}'">Return to Game</button>
-
-        <!-- Button to launch Tic Tac Toe -->
-        <button id="ticTacToeButton" onclick="window.location.href='{{ url_for('tic_tac_toe') }}'">Play Tic Tac Toe</button>
-
-        <!-- Button to launch crossword -->
-        <button id="crossword" onclick="window.location.href='{{ url_for('crossword') }}'">Play Trivia</button>
-
-        <!-- Button to launch RPS game -->
-        <button id="rpsButton" onclick="window.location.href='{{ url_for('battle') }}'">Fight Boss</button>
-        
-        <!-- Button to launch pong game -->
-        <button id="pongButton" onclick="window.location.href='{{ url_for('pong') }}'">Play Pong</button>
+        <!-- Image buttons -->
+        <img id="returnButton" class="game-button" src="{{ url_for('static', filename='returnship.png') }}" onclick="window.location.href='{{ url_for('game') }}'" alt="Return to Game">
+        <img id="ticTacToeButton" class="game-button" src="{{ url_for('static', filename='droidtictactoe.png') }}" onclick="window.location.href='{{ url_for('tic_tac_toe') }}'" alt="Play Tic Tac Toe">
+        <img id="crossword" class="game-button" src="{{ url_for('static', filename='gonkdroidtrivia.png') }}" onclick="window.location.href='{{ url_for('crossword') }}'" alt="Play Trivia">
+        <img id="rpsButton" class="game-button" src="{{ url_for('static', filename='tusken.png') }}" onclick="window.location.href='{{ url_for('battle') }}'" alt="Fight Boss">
+        <img id="pongButton" class="game-button" src="{{ url_for('static', filename='jawapong.png') }}" onclick="window.location.href='{{ url_for('pong') }}'" alt="Play Pong">
 
     </div>
 
@@ -176,8 +153,8 @@
         character.src = `{{ url_for("static", filename="") }}${characterImagePath}`;
 
         // Character initial position
-        let posX = canvas.width / 2;
-        let posY = canvas.height / 2;
+        let posX = canvas.width / 1.5;
+        let posY = canvas.height / 1.5;
         const moveSpeed = 10;
 
         // Draw function to render background and character
