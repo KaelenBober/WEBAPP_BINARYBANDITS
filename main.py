@@ -384,13 +384,13 @@ def battle():
 
 
 
-@app.route('/hoth')
-def hoth():
-    return render_template('hoth_page.html')
+# @app.route('/hoth')
+# def hoth():
+#     return render_template('hoth_page.html')
 
-@app.route('/mustafar')
-def mustafar():
-    return render_template('mustafar_page.html')
+# @app.route('/mustafar')
+# def mustafar():
+#     return render_template('mustafar_page.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
